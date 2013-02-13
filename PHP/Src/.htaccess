@@ -1,0 +1,10 @@
+Options +FollowSymLinks
+RewriteEngine On
+RewriteBase /
+
+# If file does not exist
+RewriteCond %{REQUEST_FILENAME} !-f
+# If directory does not exist
+RewriteCond %{REQUEST_FILENAME} !-d
+# rewrite to index.php
+RewriteRule .* index.php [L]
