@@ -18,34 +18,41 @@ require_once(dirname(__FILE__).DIRECTORY_SEPARATOR."tsama".DIRECTORY_SEPARATOR."
 
 class Tsama extends TsamaObject{
 
+	/*Private Variables*/
 	private $m_nodes = NULL;
 	private $m_debug = NULL;
 
+	/*Public Variables*/
+	public $loaded = FALSE;
+
 	public function __construct(){
+		parent::__construct();
+
 		$this->m_debug = array();
 
-		$this->Load();
+	}
+
+	public function &GetNodes(){
+		return $this->m_nodes;
 	}
 
 	private function OnLoad(){
-		$this->NotifyObservers('OnLoad');
+		$this->NotifyObservers('OnLoad',$this);
 	}
 	public function Load(){
 
 		$this->m_nodes = HTML5parser::createNodes();
-		HTML5Parser::SetLanguage($this->m_nodes,'en');
-		HTML5Parser::SetBase($this->m_nodes,'http://'.$_SERVER['SERVER_NAME'].'/');
-		HTML5Parser::SetFavIcon($this->m_nodes,'favicon.ico');
-		HTML5Parser::SetTitle($this->m_nodes,'Home','Tsama PHP');
 
 		$this->OnLoad();
+
+		$this->loaded = TRUE;
 	}
 
 	private function BeforeAddContent(){
-		$this->NotifyObservers('BeforeAddContent');
+		$this->NotifyObservers('BeforeAddContent',$this);
 	}
 	private function OnAddContent(){
-		$this->NotifyObservers('OnAddContent');
+		$this->NotifyObservers('OnAddContent',$this);
 	}
 	public function AddContent($parent,$tag,$content){
 		$this->BeforeAddContent();
@@ -58,11 +65,14 @@ class Tsama extends TsamaObject{
 		$this->AfterAddContent();
 	}
 	private function AfterAddContent(){
-		$this->NotifyObservers('AfterAddContent');
+		$this->NotifyObservers('AfterAddContent',$this);
 	}
 
 	private function OnRun(){
-		$this->NotifyObservers('OnRun');
+		if(!$this->loaded){ $this->Load();}
+
+		$this->NotifyObservers('OnRun',$this);
+
 	}
 	public function Run(){
 		$this->OnRun();

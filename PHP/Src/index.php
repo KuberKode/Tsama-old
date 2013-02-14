@@ -15,12 +15,22 @@
 ** An Example Tsama PHP implimentation
 **/
 
-require_once("globals.php"); require_once("core/tsama.php"); 
+require_once("globals.php"); require_once("core/tsama.php");
+
+/*Experimental*/
+require_once("core/controls/customizer.inc.php");
+require_once("core/controls/publisher.inc.php");
 
 //Create Tsama instance
 $tsama = new Tsama();
 
-$tsama->AddContent('body','h1','Hello world!');
+$customizer = new TsamaCustomizer();
+$publisher = new TsamaPublisher();
+
+$tsama->AddObserver('OnLoad',$publisher,"LoadSiteInfo");
+$tsama->AddObserver('OnLoad',$customizer,"LoadTheme");
+$tsama->AddObserver('OnLoad',$customizer,"LoadLayout");
+$tsama->AddObserver('OnRun',$publisher,"LoadContent");
 
 $tsama->Run();
 
