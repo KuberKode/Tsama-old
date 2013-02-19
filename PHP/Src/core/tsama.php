@@ -13,8 +13,8 @@
 
 define("TSAMA",TRUE);
 
-require_once(dirname(__FILE__).DIRECTORY_SEPARATOR."tsama".DIRECTORY_SEPARATOR."object.class.php");
-require_once(dirname(__FILE__).DIRECTORY_SEPARATOR."tsama".DIRECTORY_SEPARATOR."html5parser.class.php");
+require_once(dirname(__FILE__).DS."tsama".DS."object.class.php");
+require_once(dirname(__FILE__).DS."tsama".DS."html5parser.class.php");
 
 class Tsama extends TsamaObject{
 
@@ -30,6 +30,19 @@ class Tsama extends TsamaObject{
 
 		$this->m_debug = array();
 
+	}
+
+	public static function GetBase(){
+		return Tsama::_conf('BASE');
+	}
+
+	public static function _conf($key){
+		global $_TSAMA_CONFIG;
+
+		if(isset($_TSAMA_CONFIG[$key])){
+			return $_TSAMA_CONFIG[$key];
+		}
+		return NULL;
 	}
 
 	public function &GetNodes(){

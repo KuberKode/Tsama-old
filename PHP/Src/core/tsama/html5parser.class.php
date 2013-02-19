@@ -13,7 +13,7 @@
 
 if(!defined('TSAMA'))exit;
 
-require_once(dirname(__FILE__).DIRECTORY_SEPARATOR."node.class.php");
+require_once(dirname(__FILE__).DS."node.class.php");
 
 class HTML5Parser{
 

@@ -13,7 +13,7 @@
  
 if(!defined('TSAMA'))exit;
 
-require_once(dirname(__FILE__).DIRECTORY_SEPARATOR."association.class.php");
+require_once(dirname(__FILE__).DS."association.class.php");
 
 class TsamaObject{
 	/*Private Variables*/
