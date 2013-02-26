@@ -50,9 +50,9 @@ class CSS3Parser{
 		$NL = '';
 		if(!$compress){ $NL = "\r\n"; }
 
-		$out = HTML5Parser::Start($node, $compress);
+		$out = CSS3Parser::Start($node, $compress);
 
-		$out .= HTML5Parser::Stop($node, $compress);
+		$out .= CSS3Parser::Stop($node, $compress);
 
 		return $out;
 
