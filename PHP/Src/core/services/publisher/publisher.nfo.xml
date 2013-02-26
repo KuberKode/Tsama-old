@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service name="publisher" title="Publisher">
+	<author>Johan Strydom</author>
+	<license>Public Domain</license>
+	<description>Publisher Service</description>
+	<copyright>2013, Johan Strydom</copyright>
+	<commands>
+		<command default="true" name="set" />
+	</commands>
+	<queries>
+		<query default="true" name="get" />
+	</queries>
+	<signals>
+		<signal name="OnLoadSiteInfo" />
+		<signal name="OnLoadServices" />
+		<signal name="OnLoadContent" />
+	</signals>
+	<slots>
+		<slot name="LoadSiteInfo" />
+		<slot name="LoadContent" />
+	</slots>
+	<layouts />
+</service>

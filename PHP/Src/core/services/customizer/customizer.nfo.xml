@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service name="customizer" title="Customizer" alias="style">
+	<author>Johan Strydom</author>
+	<license>Public Domain</license>
+	<description>Customizer Service</description>
+	<copyright>2013, Johan Strydom</copyright>
+	<commands>
+		<command default="true" name="set" />
+	</commands>
+	<queries>
+		<query default="true" name="get" />
+	</queries>
+	<signals>
+		<signal name="OnLoadTheme" />
+		<signal name="OnLoadLayout" />
+	</signals>
+	<slots>
+		<slot name="LoadTheme" />
+		<slot name="LoadLayout" />
+	</slots>
+	<layouts />
+</service>

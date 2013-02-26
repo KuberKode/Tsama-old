@@ -18,8 +18,8 @@
 require_once("globals.php"); require_once("core".DS."tsama.php");
 
 /*Experimental*/
-require_once("core".DS."services".DS."customizer.inc.php");
-require_once("core".DS."services".DS."publisher.inc.php");
+require_once("core".DS."services".DS."customizer".DS."customizer.inc.php");
+require_once("core".DS."services".DS."publisher".DS."publisher.inc.php");
 
 //Create Tsama instance
 $tsama = new Tsama();
