@@ -15,6 +15,7 @@ define("TSAMA",TRUE);
 
 require_once(dirname(__FILE__).DS."tsama".DS."object.class.php");
 require_once(dirname(__FILE__).DS."tsama".DS."html5parser.class.php");
+require_once(dirname(__FILE__).DS."tsama".DS."css3parser.class.php");
 
 class Tsama extends TsamaObject{
 

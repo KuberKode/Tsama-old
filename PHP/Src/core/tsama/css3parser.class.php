@@ -28,7 +28,17 @@ class CSS3Parser{
 
 		$css .= $node->GetName();
 
-		return '{' . $NL. $css;
+		if($node->HasChildren()){
+			$children = $node->GetChildren();
+
+			foreach($children as $child){
+				$css .= ','.$child->GetName();
+			}
+		}
+
+		$css .= '{' . $NL;
+
+		return $css;
 
 	}
 
@@ -50,9 +60,23 @@ class CSS3Parser{
 		$NL = '';
 		if(!$compress){ $NL = "\r\n"; }
 
-		$out = CSS3Parser::Start($node, $compress);
+		$out = '';
 
-		$out .= CSS3Parser::Stop($node, $compress);
+		if($node->HasChildren()){
+			$children = $node->GetChildren();
+
+			foreach($children as $child){
+				$out .= CSS3Parser::Start($child, $compress);
+				if($child->HasAttributes()){
+					$styles = $child->GetAttributes();
+
+					foreach($styles as $style => $value){
+						$out .= $style .':'.$value.';'.$NL;
+					}
+				}
+				$out .= CSS3Parser::Stop($child, $compress);
+			}
+		}
 
 		return $out;
 
