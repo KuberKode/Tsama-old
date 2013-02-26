@@ -46,8 +46,7 @@ class TsamaCustomizer extends TsamaObject{
 				$footer->attr('font-size','90%');
 
 				//We want h4 to have the same styles as footer
-				$h3 = $footer->AddChild('h4');
-
+				$h4 = $footer->AddChild('h4');
 
 				$header = $styles->AddChild('header');
 				$header->attr('font-size','120%');
