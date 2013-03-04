@@ -16,6 +16,7 @@ define("TSAMA",TRUE);
 require_once(dirname(__FILE__).DS."tsama".DS."object.class.php");
 require_once(dirname(__FILE__).DS."tsama".DS."html5parser.class.php");
 require_once(dirname(__FILE__).DS."tsama".DS."css3parser.class.php");
+require_once(dirname(__FILE__).DS."tsama".DS."useragent.class.php");
 
 class Tsama extends TsamaObject{
 
@@ -58,11 +59,24 @@ class Tsama extends TsamaObject{
 	}
 	public function Load(){
 
-		$this->m_nodes = HTML5parser::createNodes();
+		$this->m_nodes = HTML5parser::CreateNodes();
 
 		$this->OnLoad();
 
 		$this->loaded = TRUE;
+	}
+
+	public static function UA(){
+		return new TsamaUserAgent();
+	}
+
+	public static function Redirect($location = ''){
+		if(isset($_SESSION['redirect'])){
+			if(empty($location)){$location = $_SESSION['redirect'];}
+			unset($_SESSION['redirect']);
+		}
+		if(!empty($location)){ header("Location:".$location); return TRUE;}
+		return FALSE;
 	}
 
 	private function BeforeAddContent(){
