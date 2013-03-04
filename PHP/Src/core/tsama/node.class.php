@@ -34,7 +34,6 @@ class TsamaNode{
 		$this->m_name = $name;
 		$this->m_selfClosing = $selfClosing;
 		$this->m_unique = TRUE;
-		$this->m_controls = array();
 	}
 	
 	public function SetName($name){$this->m_name = $name;}
@@ -48,6 +47,14 @@ class TsamaNode{
 	
 	public function SetParent(&$parent){ $this->m_parent = $parent; }
 	public function &GetParent(){ return $this->m_parent; }
+
+	public static function Clear(&$node){
+		$node->ClearNodes();
+	}
+	public function ClearNodes(){
+		$this->m_children = array();
+		$this->m_attibutes = array();
+	}
 	
 	public function &AddChild($name,$selfClosing = FALSE){
 		

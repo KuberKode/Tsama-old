@@ -37,10 +37,13 @@ class Tsama extends TsamaObject{
 		return Tsama::_conf('BASE');
 	}
 
-	public static function _conf($key){
+	public static function _conf($key,$value=''){
 		global $_TSAMA_CONFIG;
 
 		if(isset($_TSAMA_CONFIG[$key])){
+			if(!empty($value)){
+				$_TSAMA_CONFIG[$key] = $value;
+			}
 			return $_TSAMA_CONFIG[$key];
 		}
 		return NULL;
@@ -91,8 +94,19 @@ class Tsama extends TsamaObject{
 	public function Run(){
 		$this->OnRun();
 
-		echo '<!DOCTYPE html>';
-		echo HTML5Parser::_out($this->m_nodes,null,TRUE);
+		switch(Tsama::_conf('OUTPUT')){
+			case 'ajax': case 'raw':{
+				echo HTML5Parser::_out($this->m_nodes,null,TRUE);
+			}break;
+			case 'CSS3':{
+				echo CSS3Parser::_out($this->m_nodes,TRUE);
+			}break;
+			case 'HTML5': default:{
+				echo '<!DOCTYPE html>';
+				echo HTML5Parser::_out($this->m_nodes,null,TRUE);
+			}break;
+		}
+		
 	}
 
 	public function __destruct(){

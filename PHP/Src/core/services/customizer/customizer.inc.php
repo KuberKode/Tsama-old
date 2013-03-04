@@ -18,11 +18,12 @@ class TsamaCustomizer extends TsamaObject{
 		parent::__construct();
 	}
 
+	public function OnLoadTheme(){
+		$this->NotifyObservers('OnLoadTheme',$this);
+	}
 	public function LoadTheme($main){
 			if($main){
 				$nodes = $main->GetNodes();
-
-				
 
 				//HTML5Parser::AddCSS($nodes,'body{ font-family: Arial; color: #333333; } #body-inner{ width: 80%; margin: 0 auto; padding: 12px; -moz-box-shadow: 0 0 6px #888; -webkit-box-shadow: 0 0 6px #888; box-shadow: 0 0 6px #888; } footer{ font-size: 90%; } header{ font-size: 120%; } article p{ text-align: justify; }');
 
@@ -56,10 +57,14 @@ class TsamaCustomizer extends TsamaObject{
 
 				HTML5Parser::AddCSS($nodes,CSS3Parser::_out($styles,TRUE));
 
+				$this->OnLoadTheme();
 				return;
 			}
 	}
 
+	public function OnLoadLayout(){
+		$this->NotifyObservers('OnLoadLayout',$this);
+	}
 	public function LoadLayout($main){
 			if($main){
 				$nodes = $main->GetNodes();
@@ -71,8 +76,19 @@ class TsamaCustomizer extends TsamaObject{
 				$header = $bodyInner->AddChild('header');
 				$article = $bodyInner->AddChild('article');
 				$footer = $bodyInner->AddChild('footer');
+
+				$this->OnLoadLayout();
 				return;
 			}
 	}
+
+	public function set(){
+		if(!isset($_POST)){
+			return FALSE;
+		}
+		$this->get();
+		return TRUE;
+	}
+	public function get(){}
 }
 ?>

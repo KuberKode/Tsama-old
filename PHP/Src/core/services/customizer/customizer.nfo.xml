@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<service name="customizer" title="Customizer" alias="theme">
+<service name="customizer" title="Customizer">
 	<author>Johan Strydom</author>
 	<license>Public Domain</license>
 	<description>Customizer Service</description>
 	<copyright>2013, Johan Strydom</copyright>
+	<aliases>
+		<alias name="theme" />
+		<alias name="layout" />
+	</aliases>
 	<commands>
 		<command default="true" name="set" />
 	</commands>

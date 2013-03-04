@@ -4,6 +4,9 @@
 	<license>Public Domain</license>
 	<description>Publisher Service</description>
 	<copyright>2013, Johan Strydom</copyright>
+	<aliases>
+		<alias name="ajax" />
+	</aliases>
 	<commands>
 		<command default="true" name="set" />
 	</commands>
@@ -17,6 +20,7 @@
 	</signals>
 	<slots>
 		<slot name="LoadSiteInfo" />
+		<slot name="LoadServices" />
 		<slot name="LoadContent" />
 	</slots>
 	<layouts />
