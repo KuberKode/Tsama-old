@@ -35,9 +35,13 @@ if(empty($_TSAMA_CONFIG['ROUTE'][$nlast])){
 }
 
 $subdir = str_replace(realpath($_SERVER['DOCUMENT_ROOT']),'',$_TSAMA_CONFIG['BASEDIR']);
+
 if(!empty($subdir)){
 	$subdir = str_replace("\\","/",$subdir); //fix for url in windows
-	$_TSAMA_CONFIG['SUBDIR'] = $subdir . '/';
+	if(substr($subdir,0,1) == '/'){
+		$subdir = substr($subdir,1);
+	}
+	$_TSAMA_CONFIG['SUBDIR'] = '/' . $subdir . '/';
 	$_TSAMA_CONFIG['BASE'] .= $subdir . '/'; 
 	//adjust route accordingly
 	$remArr =  explode("/",$subdir);

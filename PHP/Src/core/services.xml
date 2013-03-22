@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services name="core">
+	<description>Core Tsama Services.</description>
+	<service name="customizer" node="global">
+		<slots>
+			<slot signal="OnLoad" name="LoadTheme" />
+			<slot signal="OnLoad" name="LoadLayout" />	
+		</slots>
+		<parameters>
+			<parameter name="theme" value="default" />
+			<parameter name="layout" value="default" />
+		</parameters>
+	</service>
+	<service name="publisher" node="global">
+		<slots>
+			<slot signal="OnLoad" name="LoadServices" />
+			<slot signal="OnRun" name="LoadContent" />	
+		</slots>
+		<parameters>
+			<parameter name="output" value="HTML5" />
+		</parameters>
+	</service>
+</services>

@@ -17,12 +17,13 @@ require_once(dirname(__FILE__).DS."tsama".DS."object.class.php");
 require_once(dirname(__FILE__).DS."tsama".DS."html5parser.class.php");
 require_once(dirname(__FILE__).DS."tsama".DS."css3parser.class.php");
 require_once(dirname(__FILE__).DS."tsama".DS."useragent.class.php");
+require_once(dirname(__FILE__).DS."tsama".DS."service.class.php");
 
 class Tsama extends TsamaObject{
 
 	/*Private Variables*/
 	private $m_nodes = NULL;
-	private $m_debug = NULL;
+	private $m_coreServices = NULL;
 
 	/*Public Variables*/
 	public $loaded = FALSE;
@@ -30,7 +31,7 @@ class Tsama extends TsamaObject{
 	public function __construct(){
 		parent::__construct();
 
-		$this->m_debug = array();
+		$this->m_coreServices = array();
 
 	}
 
@@ -50,6 +51,15 @@ class Tsama extends TsamaObject{
 		return NULL;
 	}
 
+	public static function Debug($value){
+		global $_DEBUG;
+
+		if(Tsama::_conf('DEBUG')){
+			$_DEBUG[] = $value;
+		}
+
+	}
+
 	public function &GetNodes(){
 		return $this->m_nodes;
 	}
@@ -57,9 +67,87 @@ class Tsama extends TsamaObject{
 	private function OnLoad(){
 		$this->NotifyObservers('OnLoad',$this);
 	}
+
+	private function LoadCoreServices(){
+		$dom = new DomDocument();
+
+		$coreLocation = Tsama::_conf('BASEDIR').DS."core".DS;
+
+		$xmlFile = "services.xml";
+		
+		if(file_exists($coreLocation.$xmlFile)){
+			if($dom->load($coreLocation.$xmlFile)){
+				if($dom->documentElement->hasChildNodes()){
+					foreach($dom->documentElement->childNodes as $node){
+						$serviceName = '';
+						if($node->nodeType != XML_TEXT_NODE && $node->nodeType != XML_COMMENT_NODE){
+							if(strtolower($node->nodeName)=='service'){
+								if($node->attributes->getNamedItem("name")){
+									$serviceName = $node->attributes->getNamedItem("name")->nodeValue;
+									$serviceNodeName = $node->attributes->getNamedItem("node")->nodeValue;
+									$serviceNode = NULL;
+									if($serviceNodeName != 'global'){
+										//get node
+										$serviceNode = $this->m_nodes->GetFirstChild($serviceNodeName);
+										if($serviceNode == NULL){
+											$serviceNode = $this->m_nodes->GetFirstChildByAttribute('id',$serviceNodeName);
+										}
+									}
+									$serviceKey = count($this->m_coreServices);
+									$this->m_coreServices[] = new TsamaService($serviceName,$serviceNode,CORE_SERVICE,'Tsama');
+									if($node->hasChildNodes()){
+										foreach($node->childNodes as $child){
+											if($child->nodeType != XML_TEXT_NODE && $child->nodeType != XML_COMMENT_NODE){
+												//slot or parameter
+												if(strtolower($child->nodeName)=='slots'){
+													if($child->hasChildNodes()){
+														foreach($child->childNodes as $slot){
+															if($slot->nodeType != XML_TEXT_NODE && $slot->nodeType != XML_COMMENT_NODE){
+																$slotName = '';
+																$signalName = '';
+																if($slot->attributes->getNamedItem("name")){
+																	$slotName = $slot->attributes->getNamedItem("name")->nodeValue;
+																	
+																	$signalName = $slot->attributes->getNamedItem("signal")->nodeValue;
+																	Tsama::Debug( 'Tsama::'.$signalName .'() -->> Tsama'.$serviceName.'::'.$slotName.'()');
+																	$this->AddObserver($signalName,$this->m_coreServices[$serviceKey]->GetClass(),$slotName);
+																}
+															}
+														}
+													}
+												}
+												if(strtolower($child->nodeName)=='parameters'){
+													if($child->hasChildNodes()){
+														foreach($child->childNodes as $parameter){
+															if($parameter->nodeType != XML_TEXT_NODE && $parameter->nodeType != XML_COMMENT_NODE){
+																//core service parameters is global
+																if($parameter->attributes->getNamedItem("name")){
+																	$this->_conf(strtoupper($parameter->attributes->getNamedItem("name")->nodeValue),$parameter->attributes->getNamedItem("value")->nodeValue);
+																}
+																
+															}
+														}
+													}
+												}
+
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public function Load(){
 
 		$this->m_nodes = HTML5parser::CreateNodes();
+
+		//Load Core Services
+		$this->LoadCoreServices();
 
 		$this->OnLoad();
 
@@ -106,7 +194,20 @@ class Tsama extends TsamaObject{
 
 	}
 	public function Run(){
+		global $_DEBUG;
+
 		$this->OnRun();
+
+		if(Tsama::Redirect()){ return ;}
+		
+		if(Tsama::_conf("DEBUG") && count($_DEBUG) > 0){
+			$body = &$this->m_nodes->getFirstChild('body');
+			$dbg = $body->addChild("pre");
+			$dbg->attr("id","debug");
+			foreach($_DEBUG as $item){
+				$dbg->setValue($dbg->getValue() . $item . "\r\n");
+			}
+		}
 
 		switch(Tsama::_conf('OUTPUT')){
 			case 'ajax': case 'raw':{

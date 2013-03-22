@@ -39,6 +39,7 @@ class TsamaPublisher extends TsamaObject{
 	}
 	public function LoadServices($main){
 		if($main){
+			$this->LoadSiteInfo($main);
 			$this->OnLoadServices();
 		}
 	}

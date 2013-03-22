@@ -28,7 +28,7 @@ class TsamaCustomizer extends TsamaObject{
 				$theme = Tsama::_conf('THEME');
 				//TODO: Alternatively Load from DB configuration
 
-				$head = $nodes->GetFirstChild('body');
+				$head = $nodes->GetFirstChild('head');
 
 				$style =  $head->GetFirstChildByAttribute('id','main-style');
 				if(!$style){
@@ -43,7 +43,7 @@ class TsamaCustomizer extends TsamaObject{
 				$style->attr('rel','stylesheet');
 				$style->attr('type','text/css');
 				
-				$themeExt = $layout;
+				$themeExt = $theme;
 		
 				if($themeExt != 'default'){
 					//custom layouts
@@ -87,7 +87,7 @@ class TsamaCustomizer extends TsamaObject{
 
 				HTML5Parser::AddCSS($nodes,CSS3Parser::_out($styles,TRUE));*/
 
-				$this->OnLoadTheme($main,$layout);
+				$this->OnLoadTheme($main,$theme);
 				return;
 			}
 	}
