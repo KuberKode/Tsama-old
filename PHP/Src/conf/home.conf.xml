@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services>
+	<service name="thing" primary="true">
+		<title>Home</title>
+		<description>Default Home Configuration</description>
+		<layout id="main" node="article" />
+		<parameters>
+			<parameter name="name" value="article" />
+			<parameter name="query" value="get" />
+			<parameter name="item" value="1" />
+			<parameter name="limit" value="1" />
+			<parameter name="paging" value="false" />
+			<parameter name="view" value="blog" />
+		</parameters>
+	</service>
+	<service name="homey">
+		<!-- Allow for Observer model, Signals and Slots on primary service -->
+		<slots observe="primary">
+			<slot signal="BeforeGet" name="BeforeHomeyShow" />
+			<slot signal="OnGet" name="HomeyShow" />
+			<slot signal="AfterGet" name="AfterHomeyShow" />
+		</slots>
+	</service>
+	<service name="thing">
+		<layout id="header" node="header" />
+		<slots observe="this">
+			<slot signal="OnGet" name="GetPathway" />
+		</slots>
+		<parameters>
+			<parameter name="name" value="article" />
+			<parameter name="query" value="get" />
+			<parameter name="item" value="2" />
+			<parameter name="limit" value="1" />
+			<parameter name="paging" value="false" />
+			<parameter name="view" value="header" />
+		</parameters>
+	</service>
+	<service name="thing">
+		<layout id="footer" node="footer" />
+		<parameters>
+			<parameter name="name" value="article" />
+			<parameter name="query" value="get" />
+			<parameter name="item" value="3" />
+			<parameter name="limit" value="1" />
+			<parameter name="paging" value="false" />
+			<parameter name="view" value="footer" />
+		</parameters>
+	</service>
+</services>

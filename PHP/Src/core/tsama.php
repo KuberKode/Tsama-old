@@ -94,7 +94,7 @@ class Tsama extends TsamaObject{
 										}
 									}
 									$serviceKey = count($this->m_coreServices);
-									$this->m_coreServices[] = new TsamaService($serviceName,$serviceNode,CORE_SERVICE,'Tsama');
+									$this->m_coreServices[] = new TsamaService($serviceName,$serviceNode,CORE_SERVICE);
 									if($node->hasChildNodes()){
 										foreach($node->childNodes as $child){
 											if($child->nodeType != XML_TEXT_NODE && $child->nodeType != XML_COMMENT_NODE){

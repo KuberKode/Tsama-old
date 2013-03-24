@@ -47,6 +47,7 @@ class TsamaServiceInfo{
 	public $query = '';
 	public $signals = null;
 	public $slots = null;
+	public $isValid = FALSE;
 
 	public function __construct(&$name,$location='services'){
 
@@ -67,6 +68,7 @@ class TsamaServiceInfo{
 		$xmlFile = $serviceName.".nfo.xml";
 		
 		if(file_exists($serviceLocation.$xmlFile)){
+			$this->isValid = TRUE;
 			if($dom->load($serviceLocation.$xmlFile)){
 											//get title
 				if($dom->documentElement->attributes->getNamedItem("title")){
@@ -193,6 +195,7 @@ class TsamaService extends TsamaObject {
 	public $query = '';
 	public $type = 0;
 	public $parameters = null;
+	public $node = null;
 
 	private $m_signals = null;
 	private $m_slots = null;
@@ -204,6 +207,7 @@ class TsamaService extends TsamaObject {
 		$this->name = $name;
 		$this->type = $type;
 		$this->parameters = array();
+		$this->node = $node;
 
 		$classPrefix = 'Service';
 		$location = 'services';
@@ -215,17 +219,23 @@ class TsamaService extends TsamaObject {
 
 		$this->m_info = new TsamaServiceInfo($name,$location);
 
-		$this->m_signals = $this->m_info->signals;
-		$this->m_slots = $this->m_info->slots;
+		if($this->m_info->isValid){
 
-		$serviceLocation = Tsama::_conf('BASEDIR').DS.$location.DS.$name.DS;
-		$fl = $name.".inc.php";
+			$this->m_signals = $this->m_info->signals;
+			$this->m_slots = $this->m_info->slots;
+			$this->query = $this->m_info->query->name;
+			$this->command = $this->m_info->command->name;
 
-		if(file_exists($serviceLocation . $fl)){ require_once($serviceLocation.$fl); }
-		$className = $classPrefix.ucfirst($name);
+			$serviceLocation = Tsama::_conf('BASEDIR').DS.$location.DS.$name.DS;
+			$fl = $name.".inc.php";
 
-		if(class_exists($className)){
-			$this->m_class = new $className($node);
+			if(file_exists($serviceLocation . $fl)){ require_once($serviceLocation.$fl); }
+			$className = $classPrefix.ucfirst($name);
+
+			if(class_exists($className)){
+				$this->m_class = new $className($node);
+			}
+
 		}
 	}
 
@@ -288,10 +298,12 @@ class TsamaService extends TsamaObject {
 		//TODO: Setting Observers
 		//TODO: Call the Before function if exist
 		if(method_exists($this->m_class, $what)){
- 			$this->m_class->$what();
+ 			$this->m_class->$what($this->parameters);
  		}else{
  			$qry = $this->query;
- 			$this->m_class->$qry();
+ 			if(method_exists($this->m_class, $qry)){
+ 				$this->m_class->$qry($this->parameters);
+ 			}
  		}
  		//Call the After function if exist
 

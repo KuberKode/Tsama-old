@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service name="thing" title="Thing">
+	<author>Johan Strydom</author>
+	<license>Public Domain</license>
+	<description>Thing Service</description>
+	<copyright>2013, Johan Strydom</copyright>
+	<aliases />
+	<commands>
+		<command default="true" name="set" />
+	</commands>
+	<queries>
+		<query default="true" name="get" />
+	</queries>
+	<signals />
+	<slots />
+	<layouts />
+</service>
