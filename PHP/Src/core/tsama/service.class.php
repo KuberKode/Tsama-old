@@ -272,7 +272,6 @@ class TsamaService extends TsamaObject {
 	}
 
 	public function Execute(){
-		global $_WEBSITE;
 		//query is always default if commmand is not specified
 		//if comand then command executes first, query second, always
 
@@ -281,8 +280,11 @@ class TsamaService extends TsamaObject {
 
 		$what = $this->query;
 		//retriev command or query if set
-		if(isset($_WEBSITE['ROUTE'][1])){
-			$what = $_WEBSITE['ROUTE'][1];
+
+		$route = Tsama::_conf('ROUTE');
+
+		if(isset($route[1])){
+			$what = $route[1];
 			$warr = explode('-', $what);
 			if(count($warr)>1){
 				$what = '';
@@ -293,6 +295,8 @@ class TsamaService extends TsamaObject {
 				}
 			}
 		}
+
+		Tsama::Debug('Service: '.ucfirst($route[0]).'::'.$what.'()');
 
 		//TODO: Getting Parameters
 		//TODO: Setting Observers

@@ -59,13 +59,13 @@ $_DB = array(
 	'Name' => ''
 );
 
-$db_file = $_TSAMA_CONFIG['BASEDIR'].DS.'conf'.DS.'db.inc.php';
+$db_file = $_TSAMA_CONFIG['BASEDIR'].DS.'conf'.DS.'db.conf.php';
 
 if(file_exists($db_file)){
 	include($db_file);
 }
 
-$site_file = $_TSAMA_CONFIG['BASEDIR'].DS.'conf'.DS.'site.inc.php';
+$site_file = $_TSAMA_CONFIG['BASEDIR'].DS.'conf'.DS.'site.conf.php';
 
 if(file_exists($site_file)){
 	include($site_file);

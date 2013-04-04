@@ -122,7 +122,11 @@ class Tsama extends TsamaObject{
 															if($parameter->nodeType != XML_TEXT_NODE && $parameter->nodeType != XML_COMMENT_NODE){
 																//core service parameters is global
 																if($parameter->attributes->getNamedItem("name")){
-																	$this->_conf(strtoupper($parameter->attributes->getNamedItem("name")->nodeValue),$parameter->attributes->getNamedItem("value")->nodeValue);
+																	$param = strtoupper($parameter->attributes->getNamedItem("name")->nodeValue);
+																	$paramValue = $parameter->attributes->getNamedItem("value")->nodeValue;
+																	if($paramValue != 'default' && $this->_conf($param) == 'default'){
+																		$this->_conf($param,$paramValue);
+																	}
 																}
 																
 															}
