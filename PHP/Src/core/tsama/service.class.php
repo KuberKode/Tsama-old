@@ -294,9 +294,8 @@ class TsamaService extends TsamaObject {
 					}
 				}
 			}
+			Tsama::Debug('Service: '.ucfirst($route[0]).'::'.$what.'()');
 		}
-
-		Tsama::Debug('Service: '.ucfirst($route[0]).'::'.$what.'()');
 
 		//TODO: Getting Parameters
 		//TODO: Setting Observers
