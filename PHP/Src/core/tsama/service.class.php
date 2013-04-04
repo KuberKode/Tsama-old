@@ -279,22 +279,26 @@ class TsamaService extends TsamaObject {
 		//http://site/service/query/parameters/?GET
 
 		$what = $this->query;
-		//retriev command or query if set
 
-		$route = Tsama::_conf('ROUTE');
+		//retriev command or query if set for Primary Service
+		if($this->type == PRIMARY_SERVICE){
 
-		if(isset($route[1])){
-			$what = $route[1];
-			$warr = explode('-', $what);
-			if(count($warr)>1){
-				$what = '';
-				foreach ($warr as $value) {
-					if(!empty($value)){
-						$what .= ucfirst($value);
+			$route = Tsama::_conf('ROUTE');
+
+			if(isset($route[1])){
+				$what = ucfirst($route[1]);
+				$warr = explode('-', $what);
+				if(count($warr)>1){
+					$what = '';
+					foreach ($warr as $value) {
+						if(!empty($value)){
+							$what .= ucfirst($value);
+						}
 					}
 				}
+				Tsama::Debug('Primary Service: '.ucfirst($this->m_info->name).'::'.$what.'()');
 			}
-			Tsama::Debug('Service: '.ucfirst($route[0]).'::'.$what.'()');
+
 		}
 
 		//TODO: Getting Parameters

@@ -62,15 +62,18 @@ class TsamaPublisher extends TsamaObject{
 			Tsama::Debug('Service => '.$serviceName);
 
 			$serviceLocation = Tsama::_conf('BASEDIR').DS.'services'.DS.$serviceName.DS;
+			$configLocation =  Tsama::_conf('BASEDIR').DS.'conf'.DS;
 
 			$nfoFile = $serviceName.".nfo.xml";
 			
 			if(!file_exists($serviceLocation.$nfoFile)){
-				Tsama::Debug('Service '.$serviceName.' not found. Using home configuration');
-				$configName = 'home';
+				Tsama::Debug('Service '.$serviceName.' not found. Searching for '.$serviceName.' configuration.');
+				if(!file_exists($configLocation.$serviceName.".conf.xml")){
+					Tsama::Debug('Configuration '.$serviceName.' not found. Using home configuration.');
+					$configName = 'home';
+				}
 			}
 
-			$configLocation =  Tsama::_conf('BASEDIR').DS.'conf'.DS;
 			$confFile = $configName.".conf.xml";
 
 			Tsama::Debug('Config: '.$configLocation.$confFile);
