@@ -32,6 +32,7 @@ class Tsama extends TsamaObject{
 		parent::__construct();
 
 		$this->m_coreServices = array();
+		$this->m_nodes = array();
 
 	}
 
@@ -146,9 +147,32 @@ class Tsama extends TsamaObject{
 		}
 	}
 
+	private function CreateInitialNodes(){
+		switch(Tsama::_conf('OUTPUT')){
+			case 'ajax': case 'raw':{
+				$this->CreateRawNodes();
+			}break;
+			case 'CSS3':{
+				$this->CreateCSS3Nodes();
+			}break;
+			case 'HTML5': default:{
+				$this->CreateHTML5Nodes();
+			}break;
+		}
+	}
+	public function CreateRawNodes(){
+		$this->m_nodes = array();
+	}
+	public function CreateCSS3Nodes(){
+		$this->m_nodes = array();
+	}
+	public function CreateHTML5Nodes(){
+		$this->m_nodes = array();
+		$this->m_nodes = HTML5parser::CreateNodes();
+	}
 	public function Load(){
 
-		$this->m_nodes = HTML5parser::CreateNodes();
+		$this->CreateInitialNodes();
 
 		//Load Core Services
 		$this->LoadCoreServices();
