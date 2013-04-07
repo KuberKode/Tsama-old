@@ -44,9 +44,12 @@ class Tsama extends TsamaObject{
 		global $_TSAMA_CONFIG;
 
 		if(isset($_TSAMA_CONFIG[$key])){
-			if(!empty($value)){
-				$_TSAMA_CONFIG[$key] = $value;
+			if(is_string($value) && empty($value)){
+				return $_TSAMA_CONFIG[$key];
 			}
+
+			$_TSAMA_CONFIG[$key] = $value;
+
 			return $_TSAMA_CONFIG[$key];
 		}
 		return NULL;
@@ -149,7 +152,7 @@ class Tsama extends TsamaObject{
 
 	private function CreateInitialNodes(){
 		switch(Tsama::_conf('OUTPUT')){
-			case 'ajax': case 'raw':{
+			case 'AJAX': case 'RAW':{
 				$this->CreateRawNodes();
 			}break;
 			case 'CSS3':{
@@ -161,12 +164,17 @@ class Tsama extends TsamaObject{
 		}
 	}
 	public function CreateRawNodes(){
+		Tsama::_conf('OUTPUT','RAW');
 		$this->m_nodes = array();
+		$this->m_nodes = new TsamaNode('raw');
 	}
 	public function CreateCSS3Nodes(){
+		Tsama::_conf('OUTPUT','CSS3');
 		$this->m_nodes = array();
+		$this->m_nodes = new TsamaNode('css3');
 	}
 	public function CreateHTML5Nodes(){
+		Tsama::_conf('OUTPUT','HTML5');
 		$this->m_nodes = array();
 		$this->m_nodes = HTML5parser::CreateNodes();
 	}
@@ -230,7 +238,12 @@ class Tsama extends TsamaObject{
 		
 		if(Tsama::_conf("DEBUG") && count($_DEBUG) > 0){
 			$body = &$this->m_nodes->getFirstChild('body');
-			$dbg = $body->addChild("pre");
+
+			if($body){
+				$dbg = $body->addChild("pre");
+			}else{
+				$dbg = $this->m_nodes->addChild("pre");
+			}
 			$dbg->attr("id","debug");
 			foreach($_DEBUG as $item){
 				$dbg->setValue($dbg->getValue() . $item . "\r\n");
@@ -238,7 +251,7 @@ class Tsama extends TsamaObject{
 		}
 
 		switch(Tsama::_conf('OUTPUT')){
-			case 'ajax': case 'raw':{
+			case 'AJAX': case 'RAW':{
 				echo HTML5Parser::_out($this->m_nodes,null,TRUE);
 			}break;
 			case 'CSS3':{

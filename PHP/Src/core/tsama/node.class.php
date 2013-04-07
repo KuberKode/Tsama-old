@@ -164,6 +164,11 @@ class TsamaNode{
 	}
 	public function HasAttribute($attribute){ return(array_key_exists($attribute, $this->m_attibutes)); }
 	public function SetAttribute($name,$value){	$this->m_attibutes[$name] = $value; ksort($this->m_attibutes);	}
+
+	public function id($value=''){
+		if(!empty($value)){ $this->attr('id',$value); }
+		return $this->GetAttribute('id');
+	}
 	public function attr($name,$value){
 		$this->SetAttribute($name,$value);
 	}

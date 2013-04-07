@@ -172,6 +172,33 @@ class HTML5Parser{
 		return $field;
 	}
 
+	public static function CreateSelectField(&$parentNode,$label,$name,$options,$required=FALSE){
+		$field = $parentNode->AddChild("div");
+		$field->attr("class","field $name");
+		$field->attr("id","fld".$name);
+
+		$fldLabel = $field->AddChild('label');
+		$fldLabel->SetValue($label);
+		$fldLabel->attr('for',$name);
+
+		$select = $field->AddChild('select');
+		$select->attr('id','sel'.$name);
+		$select->attr('name',$name);
+
+		foreach($options as $val => $txt){
+			$opt= $select->AddChild('option');
+			$opt->attr('value',$val);
+			$opt->SetValue($txt);
+		}
+
+		if($required){
+			$select->attr('required','required');
+			$select->attr('aria-required','true');
+		}
+
+		return $field;
+	}
+
 	public static function CreateTextField(&$parentNode,$label,$name,$placeholder='',$value='',$required=FALSE){
 
 		$options = array(
