@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <services name="core">
 	<description>Core Tsama Services.</description>
+	<service name="database" node="global">
+		<slots>
+			<slot signal="OnLoad" name="Connect" />
+		</slots>
+	</service>
 	<service name="customizer" node="global">
 		<slots>
 			<slot signal="OnLoad" name="LoadTheme" />

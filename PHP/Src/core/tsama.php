@@ -113,7 +113,7 @@ class Tsama extends TsamaObject{
 																	$slotName = $slot->attributes->getNamedItem("name")->nodeValue;
 																	
 																	$signalName = $slot->attributes->getNamedItem("signal")->nodeValue;
-																	Tsama::Debug( 'Tsama::'.$signalName .'() -->> Tsama'.$serviceName.'::'.$slotName.'()');
+																	Tsama::Debug( 'Tsama::'.$signalName .'() -->> Tsama'.ucfirst($serviceName).'::'.$slotName.'()');
 																	$this->AddObserver($signalName,$this->m_coreServices[$serviceKey]->GetClass(),$slotName);
 																}
 															}
