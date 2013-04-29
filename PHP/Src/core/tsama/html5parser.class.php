@@ -258,7 +258,7 @@ class HTML5Parser{
 		return HTML5Parser::CreateField($parentNode, $options);
 	}
 
-	public static function CreatePasswordField(&$parentNode,$label,$name,$placeholder='',$required=FALSE,$createDummy = FALSE,$dummyName="password"){
+	public static function CreatePasswordField(&$parentNode,$label,$name,$placeholder='',$value = '',$required=FALSE,$createDummy = FALSE,$dummyName="password"){
 		
 		if($createDummy){
 			$dummy = HTML5Parser::CreateHiddenField($parentNode,$dummyName,$dummyName,$dummyName);
