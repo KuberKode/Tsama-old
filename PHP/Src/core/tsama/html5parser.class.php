@@ -248,7 +248,7 @@ class HTML5Parser{
 			"data" => array()
 		);
 
-		$data = array('#tag'=>'input','type'=>'text','id'=>$name,'name'=>$name,'placeholder'=>$placeholder,'value'=>$value);
+		$data = array('#tag'=>'input','type'=>'email','id'=>$name,'name'=>$name,'placeholder'=>$placeholder,'value'=>$value);
 		if($multiple){
 			$data['multiple'] = "multiple";
 		}
