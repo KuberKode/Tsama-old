@@ -163,7 +163,11 @@ class HTML5Parser{
 				if($options['data+'] && $label){
 					$label->AddChildArray($options['data']);
 				}else{
-					$field->AddChildArray($options['data']);
+					//add data container
+					$dat = $field->AddChild('span');
+					$dat->attr('class','data');
+					$dat->attr('id','dat'.$options['name']);
+					$dat->AddChildArray($options['data']);
 				}
 			}
 			
