@@ -13,6 +13,8 @@
 
 if(!defined('TSAMA'))exit;
 
+require_once('database.table.inc.php');
+
 class TsamaDatabase extends TsamaObject{
 
 	public function __construct(){
@@ -22,6 +24,65 @@ class TsamaDatabase extends TsamaObject{
 
 	public function OnConnect(){
 		$this->NotifyObservers('OnConnect',$this);
+	}
+
+	public static function Select($tablesFrom = array()){
+		global $_DB;
+		/*tables structure
+			tables[
+				'table-name' => [
+					'table-alias' => '',
+					'select-columns' => [
+						'column-name' => 'column-alias',
+						...
+					],
+					'table-where' => [
+						'column-name' => 'column-value',
+						...
+					],
+					'table-order-by' [
+						'column-name' => 'column-order',
+						...
+					],
+					'table-group-by' [
+						'column-name' => 'column-group',
+						...
+					]
+
+				],
+				...
+			]
+		*/
+
+	}
+
+	public static function Insert($tablesTo = array()){
+		global $_DB;
+
+	}
+
+	public static function Update($tables = array()){
+		global $_DB;
+
+	}
+
+	public static function Delete($tables = array()){
+		global $_DB;
+
+	}
+
+	public static function Execute($sql){
+		global $_DB;
+		
+	}
+
+	public static function GetTables(){
+		//Show tables from active db
+	}
+	public function Query($sql){
+		global $_DB;
+
+		$this->NotifyObservers('OnQuery',$this);
 	}
 
 	public function Connect($main){
