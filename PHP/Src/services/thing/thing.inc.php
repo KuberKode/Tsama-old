@@ -15,6 +15,10 @@ if(!defined('TSAMA'))exit;
 
 class ServiceThing extends TsamaObject{
 	private $m_node = NULL;
+	public $description = '';
+	public $image = '';
+	public $name = '';
+	public $url = '';
 	public function __construct(&$parentNode){
 		parent::__construct();
 		$this->m_node = $parentNode;
