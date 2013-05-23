@@ -55,7 +55,7 @@ class ServiceThing extends TsamaObject{
 			return;
 		}
 		Tsama::Debug('Invalid node specified.');
-		Tsama::Debug(print_r($params),TRUE);
+		Tsama::Debug(print_r($params,TRUE));
 	}
 }
 ?>

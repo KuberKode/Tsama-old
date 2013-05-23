@@ -25,14 +25,13 @@ class TsamaDatabase extends TsamaObject{
 		$this->NotifyObservers('OnConnect',$this);
 	}
 
-	public function IsConfigured(){
+	public static function IsConfigured(){
 		$db_file = Tsama::_conf('BASEDIR').DS.'conf'.DS.'db.conf.php';
-		$this->configured = FALSE;
 
 		if(file_exists($db_file)){
-			$this->configured = TRUE;
+			return TRUE;
 		}
-		return $this->configured;
+		return FALSE;
 	}
 
 	public function Join($tables,$table,$where,$type){

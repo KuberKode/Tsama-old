@@ -23,7 +23,7 @@ class TsamaDatabaseTable extends TsamaObject{
 	public $alias = '';
 	public $name = '';
 
-	public function __construct($name,alias='',$columns = null){
+	public function __construct($name,$alias='',$columns = null){
 
 		parent::__construct();
 

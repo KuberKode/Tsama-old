@@ -212,6 +212,14 @@ class TsamaPublisher extends TsamaObject{
 	}
 	public function LoadContent($main){
 		if($main){
+			if(!TsamaDatabase::IsConfigured()){
+				//load the setup service instead
+				$mainDiv = $main->GetNodes()->GetFirstChild('article');
+				$service = new TsamaService('setup',$mainDiv,CORE_SERVICE);
+				$service->Execute();
+
+				return;
+			}
 			foreach($this->m_services as $service){
 				if(method_exists($service, 'Execute')){
 					$service->Execute();
