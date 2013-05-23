@@ -11,7 +11,7 @@ $_TSAMA_CONFIG = array(
 	'SUBDIR' => '',
 	'ROUTE' => explode("/",substr($_SERVER['REQUEST_URI'],1,strlen($_SERVER['REQUEST_URI'])-1)),
 	'NAME' => 'Tsama PHP',
-	'VERSION' => '0.0.14',
+	'VERSION' => '0.0.31',
 	'OUTPUT' => 'HTML5',
 	'THEME' => 'default',
 	'LAYOUT' => 'default',
@@ -55,6 +55,7 @@ unset($nlast); unset($last); unset($npos); unset($subdir);
 $_DB = array(
 	'Active' => FALSE,
 	'Connection' => null,
+	'Driver' => 'mysql',
 	'Host' => 'localhost',
 	'Username' => '',
 	'Password' => '',

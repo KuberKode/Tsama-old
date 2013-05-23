@@ -16,15 +16,18 @@ if(!defined('TSAMA'))exit;
 class TsamaDatabaseTableColumn extends TsamaObject{
 
 	public $name = '';
+	public $alias = '';
 	public $value = NULL;
 	public $type = NULL;
+	public $where = NULL;
 	public $size = 0;
 
-	public function __construct($name, $value = '', $type=NULL){
+	public function __construct($name,$alias = '', $value = '', $type=NULL){
 
 		parent::__construct();
 
 		$this->name = $name;
+		$this->alias = $alias;
 	}
 
 }

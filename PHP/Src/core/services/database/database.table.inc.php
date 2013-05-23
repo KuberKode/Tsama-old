@@ -18,14 +18,17 @@ require_once('database.table.column.inc.php');
 class TsamaDatabaseTable extends TsamaObject{
 
 	private $m_columns;
+	private $m_joins;
 
+	public $alias = '';
 	public $name = '';
 
-	public function __construct($name,$columns = null){
+	public function __construct($name,alias='',$columns = null){
 
 		parent::__construct();
 
 		$this->name = $name;
+		$this->alias = $alias;
 
 		if($columns == null){
 			//get all current column info
@@ -35,8 +38,15 @@ class TsamaDatabaseTable extends TsamaObject{
 	}
 
 	public function GetColumns(){
-			//Show Columns from table
-		
+		//Show Columns from table
+	}
+
+	public function Join($table,$on,$type){
+
+	}
+
+	public function Union($table){
+
 	}
 
 }
