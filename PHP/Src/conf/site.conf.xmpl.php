@@ -6,6 +6,7 @@ $_TSAMA_CONFIG['COMPRESS'] = TRUE;
 $_TSAMA_CONFIG['HIDE_TSAMA'] = TRUE;
 $_TSAMA_CONFIG['THEME'] = 'yourtheme';
 $_TSAMA_CONFIG['LAYOUT'] = 'yourlayout';
+$_TSAMA_CONFIG['ADMINDOMAIN'] = 'admin_domain';
 $_TSAMA_CONFIG['LANGUAGE'] = 'en';
 $_TSAMA_CONFIG['DEBUG'] = TRUE;
 ?>

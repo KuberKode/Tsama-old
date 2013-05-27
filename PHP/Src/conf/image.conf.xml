@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services>
+	<service name="image" primary="true">
+		<title>Image</title>
+		<description>Image Configuration</description>
+		<layout id="main" node="article" />
+		<parameters />
+	</service>
+</services>

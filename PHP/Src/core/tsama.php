@@ -251,6 +251,11 @@ class Tsama extends TsamaObject{
 		}
 
 		switch(Tsama::_conf('OUTPUT')){
+			case 'PNG': {
+				header("Content-Type: image/png");
+				$data = $this->m_nodes->GetFirstChild('data');
+				echo (base64_decode($data->GetValue()));
+			}break;
 			case 'AJAX': case 'RAW':{
 				echo HTML5Parser::_out($this->m_nodes,null,TRUE);
 			}break;

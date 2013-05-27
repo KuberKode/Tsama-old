@@ -29,17 +29,46 @@ class TsamaSetup extends TsamaObject{
 		$this->get();
 	}
 
-	private function ShowForm($parentNode){
+	private function ShowForm($parentNode, $msg = ''){
+
+		$brand = $parentNode->AddChild('div');
+		$logo = $brand->AddChild('img');
+		$logo->attr('src',Tsama::_conf('BASE').'media/visual/images/default.domain/logo/tsama.png');
 		
 
 		$h1 = $parentNode->AddChild('h1')->SetValue('Tsama Setup<span class="nl txtNormal">Welcome, please use the following form to configure your website.</span>');
 
-		//TODO: see if config directory is writable and show appropriate message
+		if(!empty($msg)){
+
+			$error = $parentNode->AddChild('div');
+			$error->attr('id','site-msg');
+			$error->attr('class','hide');
+
+			$error->attr('class','message error');
+			$error->SetValue($msg);
+		}
+
+
+		//See if config directory is writable and show appropriate message
+		if(!is_writable(Tsama::_conf('BASEDIR').DS.'conf')){
+
+			$ms = '<strong>Configuration (<strong>/conf</strong>) directory is not writable. A chmod of 777 should fix this.<br />NB: Once setup is complete you should set chmod of /conf to 555 and any configuration files therein to 444</strong>';
+			
+			$dirErr = $parentNode->AddChild('div');
+			$dirErr->attr('id','dir-msg');
+			$dirErr->attr('class','hide');
+
+			$dirErr->attr('class','message error');
+			$dirErr->SetValue($ms);
+		
+		}
+		
 
 		$form = HTML5Parser::CreateForm($parentNode,'setup/save');
 		//show site form
 		$h3 = $form->AddChild('h3')->SetValue('Site Setup<span class="nl txtNormal">Please enter your site information.</span>');
 		$siteName = HTML5Parser::CreateTextField($form,'Site Name','site','your site name','',TRUE);
+		$ad = HTML5Parser::CreateTextField($form,'Admin Domain','domain','your admin domain','localhost',TRUE);
 
 		//TODO: Site Administrator
 
@@ -49,7 +78,7 @@ class TsamaSetup extends TsamaObject{
 		$driver = HTML5Parser::CreateTextField($form,'Driver','driver','your db driver','mysql',TRUE);
 		$host = HTML5Parser::CreateTextField($form,'Host','host','your db host','localhost',TRUE);
 		$uid = HTML5Parser::CreateTextField($form,'Username','uid','your db user','',TRUE);
-		$pwd = HTML5Parser::CreateTextField($form,'Password','pwd','your db user password','',TRUE);
+		$pwd = HTML5Parser::CreatePasswordField($form,'Password','pwd','your db user password','',TRUE);
 		$nm = HTML5Parser::CreateTextField($form,'Name','nm','your db name','',TRUE);
 
 		$save = HTML5Parser::CreateButton($form,'Save',TRUE);
@@ -83,6 +112,7 @@ class TsamaSetup extends TsamaObject{
 				$confSite = str_replace('My Site Name', $_POST['site'], $confSite);
 				$confSite = str_replace('yourtheme', 'default', $confSite);
 				$confSite = str_replace('yourlayout', 'default', $confSite);
+				$confSite = str_replace('admin_domain', $_POST['domain'], $confSite);
 
 				$fn = Tsama::_conf('BASEDIR').DS.'conf'.DS.'site.conf.php';
 				$fh = fopen($fn, 'w');
