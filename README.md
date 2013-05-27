@@ -1,7 +1,9 @@
 Tsama
 =====
 
-Tsama is my personal collection of various frameworks and code where I experiment with different ideas and concepts. I try to write as much from scratch as is possible.
+Tsama is a lightweight, public domain, php framework/cms in the early stages of development.
+
+The name tsama comes from the tsama melon of the Namib and Kalahari deserts from my country, Namibia. Tsama signify the life that is available for free to those that roam these deserts. In the same way, Tsama code is available for free to all that roam the internet.
 
 License
 =======
