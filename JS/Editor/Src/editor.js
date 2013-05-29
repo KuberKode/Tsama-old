@@ -19,6 +19,7 @@ function TsamaEditor(element,options){
 
 	this.editor = document.createElement('div');
 	this.editor.id = 'editor-input';
+	this.editor.setAttribute('contenteditable',"true"); /*magic, HTML5 only*/
 
 	//default body styles
 	this.body.style.background = '#FFFFFF';
@@ -97,33 +98,32 @@ function TsamaEditor(element,options){
 	this.buttons[5].id = 'editor-button-sup';
 	this.buttons[5].innerHTML = 'A<sup>x</sup>';
 
-	this.GetSelection = function(){
-
-		var selection = null;
+	this.GetSelectionRange = function(){
 		var range = null;
 
-	    if (typeof window.getSelection != "undefined") {
+		if (typeof window.getSelection != "undefined") {
 
 	    	range =  window.getSelection().getRangeAt(0);
 
-	    	selection = {
-	    		'range' : range,
-	    		'content' : range.extractContents()
-	    	};
-
-
 	    } else if (typeof document.selection != "undefined") {
 
-	    	ranger = document.selection.createRange();
-
-	    	selection = {
-	    		'range' : range,
-	    		'content' : range.extractContents()
-	    	};
+	    	range = document.selection.createRange();
 
 	    }
 
-	     return selection;
+		return range;
+	}
+
+	this.GetSelection = function(){
+
+		var range = this.GetSelectionRange();
+
+	    var selection = {
+	    		'range' : range,
+	    		'content' : range.extractContents()
+	    };
+
+	    return selection;
 
 	}
 
@@ -198,6 +198,7 @@ function TsamaEditor(element,options){
 
 	element.parentNode.appendChild(this.toolbar);
 
+	//this.editor.appendChild(this.blinker);
 	this.body.appendChild(this.editor);
 	element.parentNode.appendChild(this.body);
 
