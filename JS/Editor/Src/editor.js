@@ -78,24 +78,30 @@ function TsamaEditor(element,options){
 
 	this.buttons[0].id = 'editor-button-bold';
 	this.buttons[0].innerHTML = 'B';
+	this.buttons[0].title = 'Strong <Strong> Ctrl+B';
 	this.buttons[0].style.fontWeight = 'bold';
 
 	this.buttons[1].id = 'editor-button-italic';
 	this.buttons[1].innerHTML = 'I';
+	this.buttons[1].title = 'Emphasis <em> Ctrl+I';
 	this.buttons[1].style.fontStyle = 'italic';
 
 	this.buttons[2].id = 'editor-button-underline';
 	this.buttons[2].innerHTML = 'U';
+	this.buttons[2].title = 'Underline <u> Ctrl+U';
 	this.buttons[2].style.textDecoration = 'underline';
 
 	this.buttons[3].id = 'editor-button-line-through';
 	this.buttons[3].innerHTML = 'abc';
+	this.buttons[3].title = 'Line Through';
 	this.buttons[3].style.textDecoration = 'line-through';
 
 	this.buttons[4].id = 'editor-button-sub';
+	this.buttons[4].title = 'Sub';
 	this.buttons[4].innerHTML = 'A<sub>x</sub>';
 
 	this.buttons[5].id = 'editor-button-sup';
+	this.buttons[5].title = 'Sup';
 	this.buttons[5].innerHTML = 'A<sup>x</sup>';
 
 	this.GetSelectionRange = function(){
@@ -141,7 +147,7 @@ function TsamaEditor(element,options){
 
 		var selection = Editor.GetSelection();
 
-		var el = document.createElement("i");
+		var el = document.createElement("em");
 	    el.appendChild(selection.content);
 	    selection.range.insertNode(el);
 		
