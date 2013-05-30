@@ -1,3 +1,10 @@
+/*
+** 30 May 2013
+**
+** The author disclaims copyright to this source code.
+**
+*************************************************************************/
+
 function el(id){
  return document.getElementById(id);
 }
@@ -6,12 +13,17 @@ function TsamaEditor(element,options){
 
 	var Editor = this;
 
+	this.node = document.createElement("div");
+	this.node.style.boxShadow = '0 0 6px #888';
+	this.node.style.background = '#FFFFFF';
+
 	this.toolbar = document.createElement("div");
 	this.toolbar.id = 'editor-toolbar';
 
 	//default toolbar styles
-	this.toolbar.style.background = '#EFEFEF';
-	this.toolbar.style.border = '1px solid #CCCCCC';
+	this.toolbar.style.background = '#CCCCCC';
+	this.toolbar.style.border = '1px solid #ABABAB';
+	this.toolbar.style.color = '#FFFFFF';
 	this.toolbar.style.padding = '6px';
 
 	this.body = document.createElement("div");
@@ -24,7 +36,7 @@ function TsamaEditor(element,options){
 	//default body styles
 	this.body.style.background = '#FFFFFF';
 	this.body.style.border = '1px solid #CCCCCC';
-	this.body.style.borderTop = '0px';
+	this.body.style.borderTop = '0';
 
 	//default editor styles
 	this.editor.style.border = '6px solid #EFEFEF';
@@ -40,6 +52,10 @@ function TsamaEditor(element,options){
 			//border
 			if (typeof options.toolbar.border != 'undefined') {
 				this.toolbar.style.border = options.toolbar.border;
+			}
+			//color
+			if (typeof options.toolbar.color != 'undefined') {
+				this.toolbar.style.color = options.toolbar.color;
 			}
 			//padding
 			if (typeof options.toolbar.padding != 'undefined') {
@@ -68,41 +84,124 @@ function TsamaEditor(element,options){
 	}
 
 	this.buttons = new Array(
-		document.createElement("button"),
-		document.createElement("button"),
-		document.createElement("button"),
-		document.createElement("button"),
-		document.createElement("button"),
-		document.createElement("button")
+		{
+			'id':'editor-button-bold',
+			'class':'editor-button',
+			'text':'B',
+			'title':'Strong <strong> Ctrl+B',
+			'styles':{
+				'fontWeight': 'bold'
+			},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createElement("strong");
+			    el.appendChild(selection.content);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}	
+		},{
+			'id':'editor-button-italic',
+			'class':'editor-button',
+			'text':'I',
+			'title':'Emphasis <em> Ctrl+I',
+			'styles':{
+				'fontStyle': 'italic'
+			},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createElement("em");
+			    el.appendChild(selection.content);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}
+		},{
+			'id':'editor-button-underline',
+			'class':'editor-button',
+			'text':'U',
+			'title':'Underline <u> Ctrl+U',
+			'styles':{
+				'textDecoration' : 'underline'
+			},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createElement("span");
+				el.style.textDecoration = 'underline';
+			    el.appendChild(selection.content);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}
+		},{
+			'id':'editor-button-line-through',
+			'class':'editor-button',
+			'text':'S',
+			'title':'Line Through',
+			'styles':{
+				'textDecoration': 'line-through'
+			},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createElement("span");
+				el.style.textDecoration = 'line-through';
+			    el.appendChild(selection.content);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}
+		},{
+			'id':'editor-button-sub',
+			'class':'editor-button',
+			'text':'A<sub>x</sub>',
+			'title':'Subscript',
+			'styles':{},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createElement("sub");
+			    el.appendChild(selection.content);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}
+		},{
+			'id':'editor-button-sup',
+			'class':'editor-button',
+			'text':'A<sup>x</sup>',
+			'title':'Superscript',
+			'styles':{},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createElement("sup");
+			    el.appendChild(selection.content);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}
+		},{
+			'id':'editor-button-remove',
+			'class':'editor-button',
+			'text':'X',
+			'title':'Remove Formatting',
+			'styles':{
+				'textDecoration' : 'underline'
+			},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createTextNode(selection.content.textContent);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}
+		}
 	);
-
-	this.buttons[0].id = 'editor-button-bold';
-	this.buttons[0].innerHTML = 'B';
-	this.buttons[0].title = 'Strong <Strong> Ctrl+B';
-	this.buttons[0].style.fontWeight = 'bold';
-
-	this.buttons[1].id = 'editor-button-italic';
-	this.buttons[1].innerHTML = 'I';
-	this.buttons[1].title = 'Emphasis <em> Ctrl+I';
-	this.buttons[1].style.fontStyle = 'italic';
-
-	this.buttons[2].id = 'editor-button-underline';
-	this.buttons[2].innerHTML = 'U';
-	this.buttons[2].title = 'Underline <u> Ctrl+U';
-	this.buttons[2].style.textDecoration = 'underline';
-
-	this.buttons[3].id = 'editor-button-line-through';
-	this.buttons[3].innerHTML = 'abc';
-	this.buttons[3].title = 'Line Through';
-	this.buttons[3].style.textDecoration = 'line-through';
-
-	this.buttons[4].id = 'editor-button-sub';
-	this.buttons[4].title = 'Sub';
-	this.buttons[4].innerHTML = 'A<sub>x</sub>';
-
-	this.buttons[5].id = 'editor-button-sup';
-	this.buttons[5].title = 'Sup';
-	this.buttons[5].innerHTML = 'A<sup>x</sup>';
 
 	this.GetSelectionRange = function(){
 		var range = null;
@@ -133,80 +232,77 @@ function TsamaEditor(element,options){
 
 	}
 
-	this.buttons[0].onclick = function(){
-
-		var selection = Editor.GetSelection();
-
-		var el = document.createElement("strong");
-	    el.appendChild(selection.content);
-	    selection.range.insertNode(el);
-		
-	}
-
-	this.buttons[1].onclick = function(){
-
-		var selection = Editor.GetSelection();
-
-		var el = document.createElement("em");
-	    el.appendChild(selection.content);
-	    selection.range.insertNode(el);
-		
-	}
-
-	this.buttons[2].onclick = function(){
-
-		var selection = Editor.GetSelection();
-
-		var el = document.createElement("span");
-		el.style.textDecoration = 'underline';
-	    el.appendChild(selection.content);
-	    selection.range.insertNode(el);
-		
-	}
-
-	this.buttons[3].onclick = function(){
-
-		var selection = Editor.GetSelection();
-
-		var el = document.createElement("span");
-		el.style.textDecoration = 'line-through';
-	    el.appendChild(selection.content);
-	    selection.range.insertNode(el);
-		
-	}
-
-	this.buttons[4].onclick = function(){
-
-		var selection = Editor.GetSelection();
-
-		var el = document.createElement("sub");
-	    el.appendChild(selection.content);
-	    selection.range.insertNode(el);
-		
-	}
-
-	this.buttons[5].onclick = function(){
-
-		var selection = Editor.GetSelection();
-
-		var el = document.createElement("sup");
-	    el.appendChild(selection.content);
-	    selection.range.insertNode(el);
-		
-	}
-
 	//this.toolbar.innerHTML = '<select><option>Font</option></select><select><option>Size</option></select><button>B</button><button>I</button><button>U</button>';
+	var bl =  document.createElement("ul");
+	bl.id = 'button-list';
+	bl.style.listStyle = 'none';
+	bl.style.padding = '0';
+	bl.style.margin = '0';
+
 	for (var key in this.buttons) {
-		this.toolbar.appendChild(this.buttons[key]);
+		var button = this.buttons[key];
+
+		var btnLi = document.createElement("li");
+		btnLi.style.float = 'left';
+
+		var btnA = document.createElement("a");
+		btnA.id = button.id;
+		btnA.className = button.class;
+		btnA.innerHTML = button.text;
+		btnA.title = button.title;
+		btnA.style.display = 'block';
+		btnA.style.padding = '3px';
+		btnA.style.paddingLeft = '6px';
+		btnA.style.paddingRight = '6px';
+		btnA.style.marginRight = '3px';
+		if(typeof button.styles.fontStyle != "undefined"){
+			btnA.style.fontStyle = button.styles.fontStyle;
+		}
+
+		btnA.style.fontWeight = 'bold';
+		btnA.style.fontSize = '120%';
+
+		if(typeof button.styles.textDecoration != "undefined"){
+			btnA.style.textDecoration = button.styles.textDecoration;
+		}else{
+			btnA.style.textDecoration = 'none';
+		}		
+		btnA.style.border = '1px solid ' + this.toolbar.style.background;
+		btnA.style.background = this.toolbar.style.background;
+		btnA.style.color = this.toolbar.style.color;
+		btnA.style.cursor = 'pointer';
+		btnA.href= "#";
+		btnA.onclick = button.onclick;
+		btnA.onmouseover = function(){
+			this.style.border = '1px solid #999999';
+		};
+		btnA.onmouseout = function(){
+			this.style.border = '1px solid ' + Editor.toolbar.style.background;
+		};
+
+		btnLi.appendChild(btnA);
+		bl.appendChild(btnLi);
+		
 	}
+
+	this.toolbar.appendChild(bl);
+	var clr = document.createElement("div");
+	clr.style.padding = '0';
+	clr.style.margin = '0';
+	clr.style.clear = 'both';
+	clr.style.height = '1px';
+	clr.style.lineHeight = '1px';
+	clr.innerHTML = '&nbsp;';
+	this.toolbar.appendChild(clr);
 
 	this.editor.innerHTML = element.value;
 
-	element.parentNode.appendChild(this.toolbar);
+	this.node.appendChild(this.toolbar);
 
-	//this.editor.appendChild(this.blinker);
 	this.body.appendChild(this.editor);
-	element.parentNode.appendChild(this.body);
+	this.node.appendChild(this.body);
+
+	element.parentNode.appendChild(this.node);
 
 	element.style.display = 'none';
 
