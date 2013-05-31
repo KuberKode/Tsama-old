@@ -34,6 +34,38 @@ class TsamaDatabase extends TsamaObject{
 		return FALSE;
 	}
 
+	public static function IsActive(){
+		global $_DB;
+
+		return $_DB['Active'];
+	}
+
+	public static function Connection(){
+		global $_DB;
+
+		return $_DB['Connection'];
+	}
+	public static function Driver(){
+		global $_DB;
+
+		return $_DB['Driver'];
+	}
+	public static function Host(){
+		global $_DB;
+
+		return $_DB['Host'];
+	}
+	public static function Username(){
+		global $_DB;
+
+		return $_DB['Username'];
+	}
+	public static function Name(){
+		global $_DB;
+
+		return $_DB['Name'];
+	}
+
 	public function Join($tables,$table,$where,$type){
 
 	}
