@@ -5,17 +5,13 @@
 **
 *************************************************************************/
 
-function el(id){
- return document.getElementById(id);
-}
+function el(id){ return document.getElementById(id); }
 
-function TsamaEditor(element,options){
+function TsamaEditor(){
+	var Editor = this; //for internal use only
 
-	var Editor = this;
-
-	this.node = document.createElement("div");
-	this.node.style.boxShadow = '0 0 6px #888';
-	this.node.style.background = '#FFFFFF';
+	this.data = null; //TOO: Data used for Posts
+	this.element = null; //Active Element
 
 	this.toolbar = document.createElement("div");
 	this.toolbar.id = 'editor-toolbar';
@@ -24,63 +20,35 @@ function TsamaEditor(element,options){
 	this.toolbar.style.background = '#CCCCCC';
 	this.toolbar.style.border = '1px solid #ABABAB';
 	this.toolbar.style.color = '#FFFFFF';
-	this.toolbar.style.padding = '6px';
+	this.toolbar.style.padding = '3px';
+	this.toolbar.style.fontSize = '80%';
+	this.toolbar.style.display = 'none';
+	this.toolbar.style.position = 'absolute';
+	this.toolbar.style.boxShadow = '0 0 6px #888';
 
-	this.body = document.createElement("div");
-	this.body.id = 'editor-body';
+	document.body.appendChild(this.toolbar);
 
-	this.editor = document.createElement('div');
-	this.editor.id = 'editor-input';
-	this.editor.setAttribute('contenteditable',"true"); /*magic, HTML5 only*/
+	this.init = function(){
+		if(typeof document.getElementsByClassName != 'undefined'){
 
-	//default body styles
-	this.body.style.background = '#FFFFFF';
-	this.body.style.border = '1px solid #CCCCCC';
-	this.body.style.borderTop = '0';
-
-	//default editor styles
-	this.editor.style.border = '6px solid #EFEFEF';
-	this.editor.style.padding = '24px';
-
-	if(typeof options != 'undefined'){
-		//editor toolbar options
-		if (typeof options.toolbar != 'undefined') {
-			//background
-			if (typeof options.toolbar.background != 'undefined') {
-				this.toolbar.style.background = options.toolbar.background;
-			}
-			//border
-			if (typeof options.toolbar.border != 'undefined') {
-				this.toolbar.style.border = options.toolbar.border;
-			}
-			//color
-			if (typeof options.toolbar.color != 'undefined') {
-				this.toolbar.style.color = options.toolbar.color;
-			}
-			//padding
-			if (typeof options.toolbar.padding != 'undefined') {
-				this.toolbar.style.padding = options.toolbar.padding;
+			var elements = document.getElementsByClassName('editable');
+			if(elements.length > 0){
+				for (var key in elements){
+					elements[key].onclick = Editor.edit;
+				}
 			}
 		}
-		//editor body options
-		if (typeof options.body != 'undefined') {
-			//background
-			if (typeof options.body.background != 'undefined') {
-				this.body.style.background = options.body.background;
-			}
-			//border
-			if (typeof options.body.border != 'undefined') {
-				this.body.style.border = options.body.border;
-			}
-		}
-		//editor text options
-		if (typeof options.editor != 'undefined') {
-			//padding
-			if (typeof options.editor.padding != 'undefined') {
-				this.editor.style.padding = options.editor.padding;
-			}
-		}
-		
+
+		window.document.onkeydown = function (e){
+	        if (!e){ e = event; }
+
+	        //TODO: detect CTRL+B, CTRL+U , CTRL+I
+
+	        if (e.keyCode == 27){
+	        	Editor.escape();
+	        }
+      	}
+
 	}
 
 	this.buttons = new Array(
@@ -295,15 +263,49 @@ function TsamaEditor(element,options){
 	clr.innerHTML = '&nbsp;';
 	this.toolbar.appendChild(clr);
 
-	this.editor.innerHTML = element.value;
+	this.ShowToolbar = function(){
+		this.toolbar.style.display='block';
+		Editor.element.parentNode.position = 'relative';
+		this.toolbar.style.top = (Editor.element.offsetTop - this.toolbar.offsetHeight - 3) + "px";
+		Editor.element.parentNode.insertBefore(this.toolbar,Editor.element);
+	}
 
-	this.node.appendChild(this.toolbar);
+	this.HideToolbar = function(){
+		this.toolbar.style.display='none';
+	}
 
-	this.body.appendChild(this.editor);
-	this.node.appendChild(this.body);
+	this.escape = function(){
 
-	element.parentNode.appendChild(this.node);
+		Editor.HideToolbar();
+		if(Editor.element != null){
+			Editor.element.style.boxShadow = 'none';
 
-	element.style.display = 'none';
+			Editor.element.setAttribute('contenteditable',"false");
+			Editor.element.style.border = '';
+			Editor.element.style.padding = '';
 
+			Editor.element = null;
+		}
+	}
+
+	this.edit = function(){
+
+		if(Editor.element != null){
+			Editor.escape();
+		}
+		Editor.element = this;
+
+		//this.style.boxShadow = '0 0 6px #888';
+		this.style.background = '#FFFFFF';
+
+		this.setAttribute('contenteditable',"true"); /*magic, HTML5 only*/
+		this.style.border = '1px dotted #CCCCCC';
+		this.style.padding = '6px';
+
+		Editor.ShowToolbar();
+
+		//this.onblur = Editor.escape;
+	}
+
+	Editor.init();
 }
