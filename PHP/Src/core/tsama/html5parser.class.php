@@ -63,6 +63,8 @@ class HTML5Parser{
 			$head = $node->AddChild('head');
 			$body = $node->AddChild('body');
 		}
+
+		//TODO: parse string
 		
 		return $node;
 	}

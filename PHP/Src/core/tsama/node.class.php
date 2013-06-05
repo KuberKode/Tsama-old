@@ -13,6 +13,8 @@
  
 if(!defined('TSAMA'))exit;
 
+require_once(dirname(__FILE__).DS."html5parser.class.php");
+
 /*TsamaNode, a minimal node structure*/
 class TsamaNode{
 
@@ -165,10 +167,46 @@ class TsamaNode{
 	public function HasAttribute($attribute){ return(array_key_exists($attribute, $this->m_attibutes)); }
 	public function SetAttribute($name,$value){	$this->m_attibutes[$name] = $value; ksort($this->m_attibutes);	}
 
+	/*Popular attribute shortcuts*/
 	public function id($value=''){
 		if(!empty($value)){ $this->attr('id',$value); }
 		return $this->GetAttribute('id');
 	}
+	public function className($value=''){ //class is a php keyword so use DOM className instead
+		if(!empty($value)){ $this->attr('class',$value); }
+		return $this->GetAttribute('class');
+	}
+	public function value($value=''){
+		if(!empty($value)){ $this->attr('value',$value); }
+		return $this->GetAttribute('value');
+	}
+	public function title($value=''){
+		if(!empty($value)){ $this->attr('title',$value); }
+		return $this->GetAttribute('title');
+	}
+	public function src($value=''){
+		if(!empty($value)){ $this->attr('src',$value); }
+		return $this->GetAttribute('src');
+	}
+	public function href($value=''){
+		if(!empty($value)){ $this->attr('href',$value); }
+		return $this->GetAttribute('href');
+	}
+	public function name($value=''){
+		if(!empty($value)){ $this->SetName($value); }
+		return $this->GetName();
+	}
+	public function text($value=''){
+		if(!empty($value)){ $this->SetValue($value); }
+		return $this->GetValue();
+	}
+	public function html($value=''){
+		if(!empty($value)){ $this->AddChildObject(HTML5Parser::CreateNodes($value));  } //parse HTML and create nodes
+		return HTML5Parser::_out(this,null);
+	}
+
+	/*~End popular*/
+
 	public function attr($name,$value){
 		$this->SetAttribute($name,$value);
 	}
