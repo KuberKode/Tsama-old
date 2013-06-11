@@ -72,6 +72,10 @@ class Tsama extends TsamaObject{
 		$this->NotifyObservers('OnLoad',$this);
 	}
 
+	public static function GetService($name,$node){
+		return new TsamaService($name,$node,SECONDARY_SERVICE);
+	}
+
 	private function LoadCoreServices(){
 		$dom = new DomDocument();
 
