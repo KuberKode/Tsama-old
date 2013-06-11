@@ -35,6 +35,7 @@ function TsamaEditor(){
 			if(elements.length > 0){
 				for (var key in elements){
 					elements[key].onclick = Editor.edit;
+					//TODO: create data entry for this
 				}
 			}
 		}
@@ -168,8 +169,86 @@ function TsamaEditor(){
 
 			    return false;
 			}
+		},{
+			'id':'editor-button-normal',
+			'class':'editor-button-style',
+			'text':'AaBbCc<br />Normal',
+			'title':'Normal',
+			'styles':{
+				'fontWeight': 'bold'
+			},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createElement("p");
+			    el.appendChild(selection.content);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}	
+		},{
+			'id':'editor-button-h1',
+			'class':'editor-button-style',
+			'text':'<span class="biggest">AaBb</span><br />Heading 1',
+			'title':'H1',
+			'styles':{
+				'fontWeight': 'bold'
+			},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createElement("h1");
+			    el.appendChild(selection.content);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}	
+		},{
+			'id':'editor-button-h2',
+			'class':'editor-button-style',
+			'text':'<span class="biggest">AaBb</span><br />Heading 2',
+			'title':'H2',
+			'styles':{
+				'fontWeight': 'bold'
+			},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				var el = document.createElement("h2");
+			    el.appendChild(selection.content);
+			    selection.range.insertNode(el);
+
+			    return false;
+			}	
+		},{
+			'id':'editor-button-h3',
+			'class':'editor-button-style',
+			'text':'<span class="biggest">AaBb</span><br />Heading 3',
+			'title':'H3',
+			'styles':{
+				'fontWeight': 'bold'
+			},
+			'onclick': function(){
+				var selection = Editor.GetSelection();
+
+				container = selection.range.startContainer.parentNode;
+
+				alert(container.nodeName);
+
+				var el = document.createTextNode(selection.content.textContent);
+			    selection.range.insertNode(el);
+
+			    var h3 = document.createElement("h3");
+				h3.innerHTML = container.innerHTML;
+
+			    container.parentNode.replaceChild(h3, container);
+
+			    return false;
+			}	
 		}
 	);
+
+		
 
 	this.GetSelectionRange = function(){
 		var range = null;
@@ -236,16 +315,31 @@ function TsamaEditor(){
 			btnA.style.textDecoration = 'none';
 		}		
 		btnA.style.border = '1px solid ' + this.toolbar.style.background;
+		if(button.class=='editor-button-style'){
+			btnA.style.border = '2px solid #999999';
+		}
 		btnA.style.background = this.toolbar.style.background;
+		if(button.class=='editor-button-style'){
+			btnA.style.background = '#FFFFFF';
+		}
 		btnA.style.color = this.toolbar.style.color;
+		if(button.class=='editor-button-style'){
+			btnA.style.color = '#333333';
+		}
 		btnA.style.cursor = 'pointer';
 		btnA.href= "#";
 		btnA.onclick = button.onclick;
 		btnA.onmouseover = function(){
 			this.style.border = '1px solid #999999';
+			if(this.className=='editor-button-style'){
+				this.style.border = '2px solid #BBBBBB';
+			}
 		};
 		btnA.onmouseout = function(){
 			this.style.border = '1px solid ' + Editor.toolbar.style.background;
+			if(this.className=='editor-button-style'){
+				this.style.border = '2px solid #999999';
+			}
 		};
 
 		btnLi.appendChild(btnA);
