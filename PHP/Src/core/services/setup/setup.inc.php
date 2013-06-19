@@ -74,7 +74,7 @@ class TsamaSetup extends TsamaObject{
 
 		$domain = 'localhost';
 		if(isset($_POST['domain'])){ $domain = $_POST['domain']; }
-		$ad = HTML5Parser::CreateTextField($form,'Admin Domain','domain','your admin domain',$domain,TRUE);
+		$ad = HTML5Parser::CreateTextField($form,'Your Domain','domain','your main domain',$domain,TRUE);
 
 		//TODO: Site Administrator
 
