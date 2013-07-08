@@ -34,6 +34,20 @@ class TsamaDatabase extends TsamaObject{
 		return FALSE;
 	}
 
+	public static function InstallCore(){
+		if(TsamaDatabase::IsConfigured() && TsamaDatabase::IsActive()){
+			//if connnected
+			$conn = TsamaDatabase::Connection();
+			//install core tables
+			$services = new TsamaTable('t_services');
+
+			if(!$services->Exist()){
+				//set columns
+				//install
+			}
+		}
+	}
+
 	public static function IsActive(){
 		global $_DB;
 

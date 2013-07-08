@@ -13,6 +13,8 @@
 
 if(!defined('TSAMA'))exit;
 
+require_once("database.table.column.types.inc.php");
+
 class TsamaDatabaseTableColumn extends TsamaObject{
 
 	public $name = '';
@@ -20,9 +22,10 @@ class TsamaDatabaseTableColumn extends TsamaObject{
 	public $value = NULL;
 	public $type = NULL;
 	public $where = NULL;
-	public $size = 0;
+	public $size = '';
+	public $zeroFill = '';
 
-	public function __construct($name,$alias = '', $value = '', $type=NULL){
+	public function __construct($name,$type=NULL, $size='', $alias = '', $value = '', $zeroFill = FALSE){
 
 		parent::__construct();
 
