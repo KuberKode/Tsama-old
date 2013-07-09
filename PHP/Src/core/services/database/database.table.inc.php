@@ -69,7 +69,7 @@ class TsamaDatabaseTable extends TsamaObject{
 		$sth = $conn->prepare($sql);
 		$sth->execute();
 		if($sth->rowCount() > 0){
-			while($column = $sth->fetch(PDO::FETCH_OBJ);){
+			while($column = $sth->fetch(PDO::FETCH_OBJ)){
 				//get column info
 				//Field | Type | Null | Key | Default | Extra
 			}

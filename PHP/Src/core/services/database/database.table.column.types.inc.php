@@ -66,9 +66,9 @@ define('MYSQL_COLUMN_TYPE_DATETIME',21); // 'YYYY-MM-DD HH:MM:SS' - '1000-01-01 
 //TIMESTAMP[(fsp)]
 define('MYSQL_COLUMN_TYPE_TIMESTAMP',22); // 'YYYY-MM-DD HH:MM:SS' - '1970-01-01 00:00:01' UTC to '2038-01-19 03:14:07' UTC, fsp 0 to 6
 //TIME[(fsp)]
-define('MYSQL_COLUMN_TYPE_TIMESTAMP',23); // 'HH:MM:SS' - '-838:59:59' to '838:59:59', fsp 0 to 6
+define('MYSQL_COLUMN_TYPE_TIME',23); // 'HH:MM:SS' - '-838:59:59' to '838:59:59', fsp 0 to 6
 //YEAR[(2|4)]
-define('MYSQL_COLUMN_TYPE_TIMESTAMP',24); // YEAR(2) = YY = 70 to 69 (i.e. 1970 to 2069), YEAR(4) =  YYYY =  1901 to 2155, and 0000
+define('MYSQL_COLUMN_TYPE_YEAR',24); // YEAR(2) = YY = 70 to 69 (i.e. 1970 to 2069), YEAR(4) =  YYYY =  1901 to 2155, and 0000
 
 // String Types
 //--------------------
