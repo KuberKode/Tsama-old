@@ -43,7 +43,13 @@ class TsamaDatabase extends TsamaObject{
 
 			if(!$services->Exist()){
 				//set columns
+				$services->AddColumn('id',MYSQL_COLUMN_TYPE_INT);
+				$services->AddColumn('type',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$services->AddColumn('name',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$services->AddColumn('status',MYSQL_COLUMN_TYPE_TINYINT);
+
 				//install
+				$services->Create();
 			}
 		}
 	}

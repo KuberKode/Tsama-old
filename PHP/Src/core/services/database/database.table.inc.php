@@ -20,6 +20,7 @@ class TsamaDatabaseTable extends TsamaObject{
 	private $m_exist = FALSE;
 	private $m_columns;
 	private $m_joins;
+	private $m_column_idx;
 
 	public $alias = '';
 	public $name = '';
@@ -33,6 +34,7 @@ class TsamaDatabaseTable extends TsamaObject{
 		$this->name = $name;
 		$this->alias = $alias;
 		$this->m_columns = array();
+		$this->m_column_count = count($this->m_columns);
 
 		//see if table exist in db
 		$q = sprintf("SHOW TABLES LIKE '%s';",$name);
@@ -56,8 +58,11 @@ class TsamaDatabaseTable extends TsamaObject{
 		return $this->m_exist;
 	}
 
-	public function AddColumn($name,$type=NULL, $size='', $alias = '', $value = '', $zeroFill = FALSE){
+	public function AddColumn($name,$type=NULL, $size=NULL, $alias = '', $value = NULL, $zeroFill = FALSE){
+		$this->m_column_idx = count($this->m_columns);
 		$this->m_columns[] = new TsamaDatabaseTableColumn($name, $type, $size, $alias, $value, $zeroFill);
+
+		return $this->m_columns[$this->m_column_idx];
 	}
 
 	public function GetColumns(){
@@ -88,7 +93,18 @@ class TsamaDatabaseTable extends TsamaObject{
 		}
 		//create the table if it does not exist
 		if(!$this->Exist()){
+			$sql = sprintf("CREATE TABLE IF NOT EXISTS `%s` (",$this->name);
+			$keys = '';
+			$autoInc = "";
 			//build ze sql
+			foreach($this->m_columns as $column){
+				$sql .= sprintf('`%s` %s',$column->name,$column->DescribeType());
+				$keys .= $column->DescribeKey($this->name);
+				if($column->key == MYSQL_COLUMN_KEY_PRIMARY){ $autoInc .= " AUTO_INCREMENT=1"; }
+			}
+			$sql .= $keys;
+			$sql .= ") ENGINE=InnoDB DEFAULT CHARSET=latin1".$autoInc;
+			$sql .= ";";	
 		}
 		
 		
