@@ -55,6 +55,40 @@ class TsamaCustomizer extends TsamaObject{
 
 				//TODO: Theme Ext
 
+				$configLocation = Tsama::_conf('BASEDIR').DS.'themes'.DS.$theme.DS;
+				$confFile = $theme.".nfo.xml";
+				$themeUrl =  Tsama::_conf('BASE').'themes/'.$theme.'/';
+				//check for theme conf in xml or TODO: db
+				if(file_exists($configLocation.$confFile)){
+					//load config for primary service
+					Tsama::Debug("loading theme ex:". $configLocation.$confFile);
+					$dom = new DomDocument();
+					if($dom->load($configLocation.$confFile)){
+						//load theme extensions, e.g. jquery, bootstrap
+						if($dom->documentElement->hasChildNodes()){
+							foreach($dom->documentElement->childNodes as $parentNode){
+
+								$where = $nodes->GetFirstChild($parentNode->nodeName);
+
+								if($parentNode->hasChildNodes()){
+									foreach($parentNode->childNodes as $node){
+										$child = $where->AddChild($node->nodeName);
+										if($node->hasAttributes()){
+											foreach($node->attributes as $attr){
+												if($attr->name == 'src' || $attr->name == 'href'){
+													$child->attr($attr->name,$themeUrl . $attr->value);
+												}else{
+													$child->attr($attr->name,$attr->value);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
 				//CSS3Parser Experiment
 
 				//E.g. implementation in future: http://site/theme/name/css
