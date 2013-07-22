@@ -64,6 +64,19 @@ class TsamaNode{
 		$key = $this->AddChildObject($node);
 		return $this->GetChild($key);
 	}
+
+	//Append Child Object
+	public function AddChildObjectFirst(&$object){
+		if(is_object($object)){
+			
+			$object->SetParent($this);
+			array_unshift($this->m_children, clone $object);
+
+			$object = null;
+			return 0;
+		}
+		return null;
+	}
 	
 	//Handle Child Objects
 	public function AddChildObject(&$object,$createId = TRUE){

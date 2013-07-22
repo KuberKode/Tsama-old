@@ -14,12 +14,76 @@
 if(!defined('TSAMA'))exit;
 
 class TsamaCustomizer extends TsamaObject{
+
+	private $m_headFirst = null;
+	private $m_headLast = null;
+	private $m_bodyFirst = null;
+	private $m_bodyLast = null;
+
 	public function __construct(){
 		parent::__construct();
+
+		$this->m_headFirst = array();
+		$this->m_headLast = array();
+		$this->m_bodyFirst = array();
+		$this->m_bodyLast = array();
 	}
 
 	public function OnLoadTheme($tsamaMain,$layout){
 		$this->NotifyObservers('OnLoadTheme',$tsamaMain,$layout);
+	}
+
+	public function AddHeadFirst($main){
+
+		if(count($this->m_headFirst) > 0){
+
+			$nodes = $main->GetNodes();
+			$head = $nodes->GetFirstChild('head');
+
+			for($i = count($this->m_headFirst)-1;$i>=0;$i--){
+				$head->AddChildObjectFirst($this->m_headFirst[$i]);
+			}
+		}
+
+	}
+	public function AddHeadLast($main){
+
+		if(count($this->m_headLast) > 0){
+
+			$nodes = $main->GetNodes();
+			$head = $nodes->GetFirstChild('head');
+
+			for($i = count($this->m_headLast)-1;$i>=0;$i--){
+				$head->AddChildObject($this->m_headLast[$i]);
+			}
+		}
+	}
+	public function AddBodyFirst($main){
+		if(count($this->m_bodyFirst) > 0){
+
+			$nodes = $main->GetNodes();
+			$body = $nodes->GetFirstChild('body');
+
+			for($i = count($this->m_bodyFirst)-1;$i>=0;$i--){
+				$body->AddChildObjectFirst($this->m_bodyFirst[$i]);
+			}
+
+		}
+
+	}
+	public function AddBodyLast($main){
+
+		if(count($this->m_bodyLast) > 0){
+
+			$nodes = $main->GetNodes();
+			$body = $nodes->GetFirstChild('body');
+
+			for($i = count($this->m_bodyLast)-1;$i>=0;$i--){
+				$body->AddChildObject($this->m_bodyLast[$i]);
+			}
+
+		}
+
 	}
 	public function LoadTheme($main){
 			if($main){
@@ -61,24 +125,62 @@ class TsamaCustomizer extends TsamaObject{
 				//check for theme conf in xml or TODO: db
 				if(file_exists($configLocation.$confFile)){
 					//load config for primary service
-					Tsama::Debug("loading theme ex:". $configLocation.$confFile);
+					Tsama::Debug("loading theme conf:". $configLocation.$confFile);
 					$dom = new DomDocument();
 					if($dom->load($configLocation.$confFile)){
 						//load theme extensions, e.g. jquery, bootstrap
 						if($dom->documentElement->hasChildNodes()){
 							foreach($dom->documentElement->childNodes as $parentNode){
+								if($parentNode->nodeType != XML_TEXT_NODE && $parentNode->nodeType != XML_COMMENT_NODE){
 
-								$where = $nodes->GetFirstChild($parentNode->nodeName);
+									$position = 'default';
 
-								if($parentNode->hasChildNodes()){
-									foreach($parentNode->childNodes as $node){
-										$child = $where->AddChild($node->nodeName);
-										if($node->hasAttributes()){
-											foreach($node->attributes as $attr){
-												if($attr->name == 'src' || $attr->name == 'href'){
-													$child->attr($attr->name,$themeUrl . $attr->value);
-												}else{
-													$child->attr($attr->name,$attr->value);
+									if($parentNode->hasAttributes()){
+										if($parentNode->attributes->getNamedItem("position")){
+											$position = $parentNode->attributes->getNamedItem("position")->nodeValue;
+										}
+									}
+
+									if($parentNode->hasChildNodes()){
+										foreach($parentNode->childNodes as $node){
+											if($node->nodeType != XML_TEXT_NODE && $node->nodeType != XML_COMMENT_NODE){
+												switch($position){
+													case 'first':{
+														if($parentNode->nodeName == 'head'){
+															$key = count($this->m_headFirst);
+															$this->m_headFirst[] = new TsamaNode($node->nodeName);
+															$child = $this->m_headFirst[$key];
+														}else{
+															$key = count($this->m_bodyFirst);
+															$this->m_bodyFirst[] = new TsamaNode($node->nodeName);
+															$child = $this->m_bodyFirst[$key];
+														}
+													}break;
+													case 'last':{
+														if($parentNode->nodeName == 'head'){
+															$key = count($this->m_headLast);
+															$this->m_headLast[] = new TsamaNode($node->nodeName);
+															$child = $this->m_headLast[$key];
+														}else{
+															$key = count($this->m_bodyLast);
+															$this->m_bodyLast[] = new TsamaNode($node->nodeName);
+															$child = $this->m_bodyLast[$key];
+														}
+													}break;
+													default:{
+														$where = $nodes->GetFirstChild($parentNode->nodeName);
+														$child = $where->AddChild($node->nodeName);
+													}break;
+												}
+
+												if($node->hasAttributes()){
+													foreach($node->attributes as $attr){
+														if($attr->name == 'src' || $attr->name == 'href'){
+															$child->attr($attr->name,$themeUrl . $attr->value);
+														}else{
+															$child->attr($attr->name,$attr->value);
+														}
+													}
 												}
 											}
 										}
@@ -88,6 +190,11 @@ class TsamaCustomizer extends TsamaObject{
 						}
 					}
 				}
+
+				$main->AddObserver('OnRun',$this,'AddHeadFirst');
+				$main->AddObserver('OnRun',$this,'AddBodyFirst');
+				$main->AddObserver('AfterRun',$this,'AddHeadLast');
+				$main->AddObserver('AfterRun',$this,'AddBodyLast');
 
 				//CSS3Parser Experiment
 
