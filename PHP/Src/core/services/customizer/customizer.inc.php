@@ -291,6 +291,10 @@ class TsamaCustomizer extends TsamaObject{
 							//set id to nodename
 							$child->attr("id",$node->nodeName);
 						}
+						//Load className
+						if($node->attributes->getNamedItem("class")){
+							$child->attr("class",$node->attributes->getNamedItem("class")->nodeValue);
+						}
 						//Set primary node for service/content
 						if($node->attributes->getNamedItem("primary")){
 							$child->attr("class",'primary service');
