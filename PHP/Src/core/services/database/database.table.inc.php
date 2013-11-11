@@ -38,7 +38,7 @@ class TsamaDatabaseTable extends TsamaObject{
 
 		//see if table exist in db
 		$q = sprintf("SHOW TABLES LIKE '%s';",$name);
-		$sth = $conn->prepare($sql);
+		$sth = $conn->prepare($q);
 		$sth->execute();
 
 		if($sth->rowCount() > 0){ 

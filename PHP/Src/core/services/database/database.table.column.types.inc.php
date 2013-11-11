@@ -83,18 +83,22 @@ define('MYSQL_COLUMN_TYPE_TINYBLOB',33); //255 (2^8 – 1) bytes
 define('MYSQL_COLUMN_TYPE_TINYTEXT',34); //255 (2^8 – 1) bytes
 //BLOB[(M)]
 define('MYSQL_COLUMN_TYPE_BLOB',35); //65,535 (2^16 – 1) bytes
+//[NATIONAL] CHAR[(M)] [CHARACTER SET charset_name] [COLLATE collation_name]
+define('MYSQL_COLUMN_TYPE_CHAR',36);  //0 to 255 characters. If M is omitted, the length is 1.
+//[NATIONAL] VARCHAR(M) [CHARACTER SET charset_name] [COLLATE collation_name]
+define('MYSQL_COLUMN_TYPE_VARCHAR',37); //0 to 65,535 characters, 0 to 21,844 for utf8
 //TEXT[(M)] [CHARACTER SET charset_name] [COLLATE collation_name]
-define('MYSQL_COLUMN_TYPE_TEXT',36);  //65,535 (2^16 – 1) characters
+define('MYSQL_COLUMN_TYPE_TEXT',38);  //65,535 (2^16 – 1) characters
 //MEDIUMBLOB
-define('MYSQL_COLUMN_TYPE_MEDIUMBLOB',37);//16,777,215 (2^24 – 1) bytes
+define('MYSQL_COLUMN_TYPE_MEDIUMBLOB',39);//16,777,215 (2^24 – 1) bytes
 //MEDIUMTEXT [CHARACTER SET charset_name] [COLLATE collation_name]
-define('MYSQL_COLUMN_TYPE_MEDIUMTEXT',38);//16,777,215 (2^24 – 1) characters
+define('MYSQL_COLUMN_TYPE_MEDIUMTEXT',40);//16,777,215 (2^24 – 1) characters
 //LONGBLOB
-define('MYSQL_COLUMN_TYPE_LONGBLOB',39);//4,294,967,295 or 4GB (232 – 1) bytes
+define('MYSQL_COLUMN_TYPE_LONGBLOB',41);//4,294,967,295 or 4GB (232 – 1) bytes
 //LONGTEXT [CHARACTER SET charset_name] [COLLATE collation_name]
-define('MYSQL_COLUMN_TYPE_LONGTEXT',40);//4,294,967,295 or 4GB (232 – 1) characters
+define('MYSQL_COLUMN_TYPE_LONGTEXT',42);//4,294,967,295 or 4GB (232 – 1) characters
 //ENUM('value1','value2',...) [CHARACTER SET charset_name] [COLLATE collation_name]
-define('MYSQL_COLUMN_TYPE_ENUM',41);//maximum of 65,535 distinct elements , The practical limit is less than 3000
+define('MYSQL_COLUMN_TYPE_ENUM',43);//maximum of 65,535 distinct elements , The practical limit is less than 3000
 //SET('value1','value2',...) [CHARACTER SET charset_name] [COLLATE collation_name]
-define('MYSQL_COLUMN_TYPE_SET',42);//maximum of 64 distinct members
+define('MYSQL_COLUMN_TYPE_SET',44);//maximum of 64 distinct members
 ?>

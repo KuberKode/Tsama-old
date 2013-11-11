@@ -39,7 +39,7 @@ class TsamaDatabase extends TsamaObject{
 			//if connnected
 			$conn = TsamaDatabase::Connection();
 			//install core tables
-			$services = new TsamaTable('t_services');
+			$services = new TsamaDatabaseTable('t_services');
 
 			if(!$services->Exist()){
 				//set columns
