@@ -53,7 +53,7 @@ class TsamaCustomizer extends TsamaObject{
 			$nodes = $main->GetNodes();
 			$head = $nodes->GetFirstChild('head');
 
-			for($i = count($this->m_headLast)-1;$i>=0;$i--){
+			for($i = 0; $i < count($this->m_headLast); $i++){
 				$head->AddChildObject($this->m_headLast[$i]);
 			}
 		}
@@ -78,7 +78,7 @@ class TsamaCustomizer extends TsamaObject{
 			$nodes = $main->GetNodes();
 			$body = $nodes->GetFirstChild('body');
 
-			for($i = count($this->m_bodyLast)-1;$i>=0;$i--){
+			for($i = 0; $i < count($this->m_bodyLast); $i++){
 				$body->AddChildObject($this->m_bodyLast[$i]);
 			}
 
