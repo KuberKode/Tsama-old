@@ -34,6 +34,26 @@ class TsamaDatabase extends TsamaObject{
 		return FALSE;
 	}
 
+	public static function InstallCore(){
+		if(TsamaDatabase::IsConfigured() && TsamaDatabase::IsActive()){
+			//if connnected
+			$conn = TsamaDatabase::Connection();
+			//install core tables
+			$services = new TsamaDatabaseTable('t_services');
+
+			if(!$services->Exist()){
+				//set columns
+				$services->AddColumn('id',MYSQL_COLUMN_TYPE_INT);
+				$services->AddColumn('type',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$services->AddColumn('name',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$services->AddColumn('status',MYSQL_COLUMN_TYPE_TINYINT);
+
+				//install
+				$services->Create();
+			}
+		}
+	}
+
 	public static function IsActive(){
 		global $_DB;
 

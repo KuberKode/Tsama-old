@@ -4,9 +4,12 @@ session_start();
 
 define('DS', DIRECTORY_SEPARATOR);
 
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
+
 $_TSAMA_CONFIG = array(
+	'PROTOCOL' => $protocol,
 	'BASEDIR' => dirname(__FILE__),
-	'BASE' => 'http://'.$_SERVER['SERVER_NAME'].'/',
+	'BASE' => $protocol.'://'.$_SERVER['SERVER_NAME'].'/',
 	'DOMAIN' => $_SERVER['SERVER_NAME'],
 	'SUBDIR' => '',
 	'ROUTE' => explode("/",substr($_SERVER['REQUEST_URI'],1,strlen($_SERVER['REQUEST_URI'])-1)),
@@ -15,12 +18,15 @@ $_TSAMA_CONFIG = array(
 	'OUTPUT' => 'HTML5',
 	'THEME' => 'default',
 	'LAYOUT' => 'default',
+	'ADMINDOMAIN' => 'localhost',
+	'USERAGENT' => $_SERVER['HTTP_USER_AGENT'],
 	'LOGO' => 'tsama.png',
 	'COMPRESS' => FALSE,
 	'HIDE_TSAMA' => FALSE,
 	'LANGUAGE' => 'en',
 	'DEBUG' => TRUE
 );
+unset($protocol);
 
 $_DEBUG = array();
 

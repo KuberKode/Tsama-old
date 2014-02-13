@@ -234,10 +234,12 @@ class Tsama extends TsamaObject{
 	}
 
 	private function OnRun(){
+		$this->BeforeRun();
+
 		if(!$this->loaded){ $this->Load();}
-
 		$this->NotifyObservers('OnRun',$this);
-
+		
+		$this->AfterRun();
 	}
 
 	private function AfterRun(){
@@ -248,7 +250,6 @@ class Tsama extends TsamaObject{
 	public function Run(){
 		global $_DEBUG;
 
-		$this->BeforeRun();
 		$this->OnRun();
 
 		if(Tsama::Redirect()){ return ;}
@@ -267,9 +268,17 @@ class Tsama extends TsamaObject{
 			}
 		}
 
-		$this->AfterRun();
-
 		switch(Tsama::_conf('OUTPUT')){
+			case 'JPG': case 'JPEG': {
+				header("Content-Type: image/jpg");
+				$data = $this->m_nodes->GetFirstChild('data');
+				echo (base64_decode($data->GetValue()));
+			}break;
+			case 'PNG': {
+				header("Content-Type: image/png");
+				$data = $this->m_nodes->GetFirstChild('data');
+				echo (base64_decode($data->GetValue()));
+			}break;
 			case 'AJAX': case 'RAW':{
 				echo HTML5Parser::_out($this->m_nodes,null,TRUE);
 			}break;
