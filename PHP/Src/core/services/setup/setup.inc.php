@@ -65,38 +65,96 @@ class TsamaSetup extends TsamaObject{
 		
 
 		$form = HTML5Parser::CreateForm($parentNode,'setup/save');
+
+		$row = $form->AddChild('div');
+		$row->attr('class','row');
+		//$col->attr('class','column w50');
 		//show site form
-		$h3 = $form->AddChild('h3')->SetValue('Site Setup<span class="nl txtNormal">Please enter your site information.</span>');
+		$h3 = $row->AddChild('h3')->SetValue('Site Setup<span class="nl txtNormal">Please enter your site information.</span>');
+
+		$col = $row->AddChild('div');
+		$col->attr('class','column w50');	
 
 		$site = '';
 		if(isset($_POST['site'])){ $site = $_POST['site']; }
-		$siteName = HTML5Parser::CreateTextField($form,'Site Name','site','your site name',$site,TRUE);
+		$siteName = HTML5Parser::CreateTextField($col,'Site Name','site','your site name',$site,TRUE);
+		
 
-		$domain = 'localhost';
+		$domain = Tsama::_conf('DOMAIN');
 		if(isset($_POST['domain'])){ $domain = $_POST['domain']; }
-		$ad = HTML5Parser::CreateTextField($form,'Your Domain','domain','your main domain',$domain,TRUE);
+		$ad = HTML5Parser::CreateTextField($col,'Main Domain','domain','your main domain',$domain,TRUE);
 
-		//TODO: Site Administrator
+		$col = $row->AddChild('div');
+		$col->attr('class','column w50');
 
-		$h3 = $form->AddChild('h3')->SetValue('Database Setup<span class="nl txtNormal">Please enter your database credentials.</span>');
+		$adomain ='';
+		if(isset($_POST['adomain1'])){ $adomain = $_POST['adomain1']; }
+		$ad = HTML5Parser::CreateTextField($col,'Alternate Domains','adomain1','your alternate domain',$adomain,FALSE);
+
+		$adomain ='';
+		if(isset($_POST['adomain2'])){ $adomain = $_POST['adomain2']; }
+		$ad = HTML5Parser::CreateTextField($col,'','adomain2','another alternate domain',$adomain,FALSE);
+
+		$adomain ='';
+		if(isset($_POST['adomain3'])){ $adomain = $_POST['adomain3']; }
+		$ad = HTML5Parser::CreateTextField($col,'','adomain3','alternate domain',$adomain,FALSE);
+
+		$row = $form->AddChild('div');
+		$row->attr('class','row');
+		//Site Administrator
+		$h3 = $row->AddChild('h3')->SetValue('Administrator Setup<span class="nl txtNormal">Please enter your user information.</span>');
+
+		$col = $row->AddChild('div');
+		$col->attr('class','column w50');
+		$admin = '';
+		if(isset($_POST['admin'])){ $admin = $_POST['admin']; }
+		$adminName = HTML5Parser::CreateTextField($col,'Username','admin','your username',$admin,TRUE);
+
+		$email = '';
+		if(isset($_POST['email'])){ $email = $_POST['email']; }
+		$emailInfo = HTML5Parser::CreateEmailField($col,'Email','email','your email address',$email,TRUE);
+
+		$col = $row->AddChild('div');
+		$col->attr('class','column w50');
+
+		$pwd1 = HTML5Parser::CreatePasswordField($col,'Password','pwd','your administrator password','',TRUE);
+
+		$pwd2 = HTML5Parser::CreatePasswordField($col,'Confirm Password','cpwd','confirm password','',TRUE);
+
+		$row = $form->AddChild('div');
+		$row->attr('class','row');
+
+		$h3 = $row->AddChild('h3')->SetValue('Database Setup<span class="nl txtNormal">Please enter your database credentials.</span>');
+
+		$row = $form->AddChild('div');
+		$row->attr('class','row');
+
+		$col = $row->AddChild('div');
+		$col->attr('class','column w50');
 
 		//show db form
 		$driver = 'mysql';
 		if(isset($_POST['driver'])){ $driver = $_POST['driver']; }
-		$driver = HTML5Parser::CreateTextField($form,'Driver','driver','your db driver',$driver,TRUE);
+		$driver = HTML5Parser::CreateTextField($col,'Driver','driver','your db driver',$driver,TRUE);
 
 		$host = 'localhost';
 		if(isset($_POST['host'])){ $host = $_POST['host']; }
-		$host = HTML5Parser::CreateTextField($form,'Host','host','your db host',$host,TRUE);
-		$uid = '';
-		if(isset($_POST['uid'])){ $uid = $_POST['uid']; }
-		$uid = HTML5Parser::CreateTextField($form,'Username','uid','your db user',$uid,TRUE);
-
-		$pwd = HTML5Parser::CreatePasswordField($form,'Password','pwd','your db user password','',TRUE);
+		$host = HTML5Parser::CreateTextField($col,'Host','host','your db host',$host,TRUE);
 
 		$nm = '';
 		if(isset($_POST['nm'])){ $nm = $_POST['nm']; }
-		$nm = HTML5Parser::CreateTextField($form,'Name','nm','your db name',$nm,TRUE);
+		$nm = HTML5Parser::CreateTextField($col,'Name','nm','your db name',$nm,TRUE);
+
+		$col = $row->AddChild('div');
+		$col->attr('class','column w50');
+		$uid = '';
+		if(isset($_POST['uid'])){ $uid = $_POST['uid']; }
+		$uid = HTML5Parser::CreateTextField($col,'Username','uid','your db user',$uid,TRUE);
+
+		$pwd = HTML5Parser::CreatePasswordField($col,'Password','dbpwd','your db user password','',TRUE);
+
+		$pwd2 = HTML5Parser::CreatePasswordField($col,'Confirm Password','cdbpwd','confirm password','',TRUE);
+		
 
 		$save = HTML5Parser::CreateButton($form,'Save',TRUE);
 	}
@@ -109,8 +167,15 @@ class TsamaSetup extends TsamaObject{
 
 		$site = $_POST['site'];
 		$domain = $_POST['domain'];
+		$altdomains = $_POST['adomain1'];
+		if(!@empty($_POST['adomain2'])){
+			$altdomains .= ",".$_POST['adomain2'];
+		}
+		if(!@empty($_POST['adomain3'])){
+			$altdomains .= ",".$_POST['adomain3'];
+		}
 
-		$conf = "<?php\n\$_TSAMA_CONFIG['NAME'] = '".$site."';\n\$_TSAMA_CONFIG['LOGO'] = 'tsama.png';\n\$_TSAMA_CONFIG['COMPRESS'] = TRUE;\n\$_TSAMA_CONFIG['HIDE_TSAMA'] = TRUE;\n\$_TSAMA_CONFIG['THEME'] = 'default';\n\$_TSAMA_CONFIG['LAYOUT'] = 'default';\n\$_TSAMA_CONFIG['ADMINDOMAIN'] = '".$domain."';\n\$_TSAMA_CONFIG['LANGUAGE'] = 'en';\n\$_TSAMA_CONFIG['DEBUG'] = TRUE;\n?>";
+		$conf = "<?php\n\$_TSAMA_CONFIG['NAME'] = '".$site."';\n\$_TSAMA_CONFIG['LOGO'] = 'tsama.png';\n\$_TSAMA_CONFIG['COMPRESS'] = TRUE;\n\$_TSAMA_CONFIG['HIDE_TSAMA'] = TRUE;\n\$_TSAMA_CONFIG['THEME'] = 'default';\n\$_TSAMA_CONFIG['LAYOUT'] = 'default';\n\$_TSAMA_CONFIG['PRIMARY_DOMAIN'] = '".$domain."';\n\$_TSAMA_CONFIG['ALTERNATE_DOMAINS'] = '".$altdomains."';\n\$_TSAMA_CONFIG['LANGUAGE'] = 'en';\n\$_TSAMA_CONFIG['DEBUG'] = TRUE;\n?>";
 		
 
 		$fn = Tsama::_conf('BASEDIR').DS.'conf'.DS.'site.conf.php';
@@ -123,7 +188,7 @@ class TsamaSetup extends TsamaObject{
 
 	private function WriteDbConf(){
 		//continue with save
-		$conf = "<?php\n\$_DB['Driver'] = '".$_POST['driver']."';\n\$_DB['Host'] = '".$_POST['host']."';\n\$_DB['Username'] = '".$_POST['uid']."';\n\$_DB['Password'] = '".$_POST['pwd']."';\n\$_DB['Name'] = '".$_POST['nm']."';\n?>";
+		$conf = "<?php\n\$_DB['Driver'] = '".$_POST['driver']."';\n\$_DB['Host'] = '".$_POST['host']."';\n\$_DB['Username'] = '".$_POST['uid']."';\n\$_DB['Password'] = '".$_POST['dbpwd']."';\n\$_DB['Name'] = '".$_POST['nm']."';\n?>";
 
 		$fn = Tsama::_conf('BASEDIR').DS.'conf'.DS.'db.conf.php';
 		$fh = fopen($fn, 'w');
@@ -149,10 +214,18 @@ class TsamaSetup extends TsamaObject{
 			$route = Tsama::_conf('ROUTE');
 
 			if((count($route) > 0) && ($route[0] == 'setup') && ($route[1] == 'save')){
-
+				if($_POST['cdbpwd'] != $_POST['dbpwd']){
+					$this->ShowForm($setup,"Confirmed database password don't match. Please try again.");
+					return;
+				}
+				if($_POST['cpwd'] != $_POST['pwd']){
+					$this->ShowForm($setup,"Confirmed admin password don't match. Please try again.");
+					return;
+				}
+				
 				//continue with save
 				try{
-					$db = new PDO(strtolower($_POST['driver']).':host='.$_POST['host'].';dbname='.$_POST['nm'], $_POST['uid'],$_POST['pwd']);
+					$db = new PDO(strtolower($_POST['driver']).':host='.$_POST['host'].';dbname='.$_POST['nm'], $_POST['uid'],$_POST['dbpwd']);
 
 					$this->WriteSiteConf();
 
