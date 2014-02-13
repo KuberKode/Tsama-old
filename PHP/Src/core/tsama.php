@@ -234,10 +234,12 @@ class Tsama extends TsamaObject{
 	}
 
 	private function OnRun(){
+		$this->BeforeRun();
+
 		if(!$this->loaded){ $this->Load();}
-
 		$this->NotifyObservers('OnRun',$this);
-
+		
+		$this->AfterRun();
 	}
 
 	private function AfterRun(){
@@ -248,7 +250,6 @@ class Tsama extends TsamaObject{
 	public function Run(){
 		global $_DEBUG;
 
-		$this->BeforeRun();
 		$this->OnRun();
 
 		if(Tsama::Redirect()){ return ;}
@@ -266,8 +267,6 @@ class Tsama extends TsamaObject{
 				$dbg->setValue($dbg->getValue() . $item . "\r\n");
 			}
 		}
-
-		$this->AfterRun();
 
 		switch(Tsama::_conf('OUTPUT')){
 			case 'JPG': case 'JPEG': {
