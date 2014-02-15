@@ -87,10 +87,64 @@ class TsamaCustomizer extends TsamaObject{
 	}
 	public function LoadTheme($main){
 			if($main){
+
+				$route = Tsama::_conf('ROUTE');
+
 				$nodes = $main->GetNodes();
 
 				$theme = Tsama::_conf('THEME');
 				//TODO: Alternatively Load from DB configuration
+				$serviceName = 'default';
+				//See if primary service configuration overrides the global configured layout
+				$configName = 'home';
+				if(isset($route[0])){$serviceName = $route[0]; $configName = $serviceName;}
+				$serviceLocation = Tsama::_conf('BASEDIR').DS.'services'.DS.$serviceName.DS;
+				$configLocation =  Tsama::_conf('BASEDIR').DS.'conf'.DS;
+				$nfoFile = $serviceName.".nfo.xml";
+				if(!file_exists($serviceLocation.$nfoFile)){
+					if(!file_exists($configLocation.$serviceName.".conf.xml")){
+						$configName = 'home';
+					}
+				}
+				$confFile = $configName.".conf.xml";
+				//check for service conf in xml or TODO: db
+				if(file_exists($configLocation.$confFile)){
+					//get config for primary service
+					$dom = new DomDocument();
+					if($dom->load($configLocation.$confFile)){
+						//load service
+						if($dom->documentElement->hasChildNodes()){
+							foreach($dom->documentElement->childNodes as $service){
+								if($service->nodeType != XML_TEXT_NODE && $service->nodeType != XML_COMMENT_NODE){
+									if(strtolower($service->nodeName) == 'service'){
+										if($service->attributes->getNamedItem("name")){
+											//get real service name
+											$serviceName = $service->attributes->getNamedItem("name")->nodeValue;
+
+											//check for primary
+											if($service->attributes->getNamedItem("primary")){
+												if(strtolower($service->attributes->getNamedItem("primary")->nodeValue) == 'true' ){
+
+													//search foe layout override
+													if($service->attributes->getNamedItem("theme")){
+														$oTheme = $service->attributes->getNamedItem("theme")->nodeValue;
+														if(!empty($oTheme)){
+															$theme = $oTheme;
+															unset($oTheme);
+														}
+													}
+
+													break;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				/**/
 
 				$head = $nodes->GetFirstChild('head');
 
@@ -238,13 +292,67 @@ class TsamaCustomizer extends TsamaObject{
 	}
 	public function LoadLayout($main){
 			if($main){
+
+				$route = Tsama::_conf('ROUTE');
 		
 				$dom = new DomDocument();
 
 				$location = Tsama::_conf('BASEDIR').DS.'layouts'.DS;
 
 				$layout = Tsama::_conf('LAYOUT');
-				//TODO: Alternatively Load Layout from DB configuration
+				//TODO: Alternatively Load Layout from DB/service configuration
+				$serviceName = 'default';
+
+				//See if primary service configuration overrides the global configured layout
+				$configName = 'home';
+				if(isset($route[0])){$serviceName = $route[0]; $configName = $serviceName;}
+				$serviceLocation = Tsama::_conf('BASEDIR').DS.'services'.DS.$serviceName.DS;
+				$configLocation =  Tsama::_conf('BASEDIR').DS.'conf'.DS;
+				$nfoFile = $serviceName.".nfo.xml";
+				if(!file_exists($serviceLocation.$nfoFile)){
+					if(!file_exists($configLocation.$serviceName.".conf.xml")){
+						$configName = 'home';
+					}
+				}
+				$confFile = $configName.".conf.xml";
+				//check for service conf in xml or TODO: db
+				if(file_exists($configLocation.$confFile)){
+					//get config for primary service
+					$cdom = new DomDocument();
+					if($cdom->load($configLocation.$confFile)){
+						//load service
+						if($cdom->documentElement->hasChildNodes()){
+							foreach($cdom->documentElement->childNodes as $service){
+								if($service->nodeType != XML_TEXT_NODE && $service->nodeType != XML_COMMENT_NODE){
+									if(strtolower($service->nodeName) == 'service'){
+										if($service->attributes->getNamedItem("name")){
+											//get real service name
+											$serviceName = $service->attributes->getNamedItem("name")->nodeValue;
+
+											//check for primary
+											if($service->attributes->getNamedItem("primary")){
+												if(strtolower($service->attributes->getNamedItem("primary")->nodeValue) == 'true' ){
+
+													//search foe layout override
+													if($service->attributes->getNamedItem("layout")){
+														$oLayout = $service->attributes->getNamedItem("layout")->nodeValue;
+														if(!empty($oLayout)){
+															$layout = $oLayout;
+															unset($oLayout);
+														}
+													}
+
+													break;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				/**/
 
 				$xmlFile = $layout.".xml";
 		
