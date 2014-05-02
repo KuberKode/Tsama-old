@@ -151,17 +151,46 @@ class TsamaDatabase extends TsamaObject{
 
 	}
 
-	public static function Execute($sql){
-		return $this->Query($sql);		
+	public static function Execute($sql,$params = null){
+		global $_DB;
+
+		$sth = null;
+
+		$conn = $_DB['Connection'];
+		if($_DB['Active'] && is_object($conn)){
+			$sth = $conn->prepare($sql);
+			if($params){
+				$sth->execute($params);
+			}else{
+				$sth->execute();
+			}
+			return $sth;
+		}
+		$this->NotifyObservers('OnQuery',$this,$sql);
+		if(is_null($sth)){return FALSE;}
+		return TRUE;		
 	}
 
 	public static function GetTables(){
 		//Show tables from active db
 	}
-	public function Query($sql){
+	public function Query($sql,$params = null){
 		global $_DB;
 
-		$this->NotifyObservers('OnQuery',$this);
+		$sth = null;
+
+		$conn = $_DB['Connection'];
+		if($_DB['Active'] && is_object($conn)){
+			$sth = $conn->prepare($sql);
+			if($params){
+				$sth->execute($params);
+			}else{
+				$sth->execute();
+			}
+			return $sth;
+		}
+		$this->NotifyObservers('OnQuery',$this,$sql);
+		if(is_null($sth)){return FALSE;}
 		return TRUE;
 	}
 
