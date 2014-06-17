@@ -166,7 +166,7 @@ class TsamaDatabase extends TsamaObject{
 			}
 			return $sth;
 		}
-		$this->NotifyObservers('OnQuery',$this,$sql);
+		$conn->NotifyObservers('OnQuery',$conn,$sql);
 		if(is_null($sth)){return FALSE;}
 		return TRUE;		
 	}
