@@ -95,7 +95,7 @@ class TsamaCustomizer extends TsamaObject{
 				$theme = Tsama::_conf('THEME');
 				//TODO: Alternatively Load from DB configuration
 				$serviceName = 'default';
-				//See if primary service configuration overrides the global configured layout
+				//See if primary service configuration overrides the global configured theme
 				$configName = 'home';
 				if(isset($route[0])){$serviceName = $route[0]; $configName = $serviceName;}
 				$serviceLocation = Tsama::_conf('BASEDIR').DS.'services'.DS.$serviceName.DS;
@@ -125,7 +125,7 @@ class TsamaCustomizer extends TsamaObject{
 											if($service->attributes->getNamedItem("primary")){
 												if(strtolower($service->attributes->getNamedItem("primary")->nodeValue) == 'true' ){
 
-													//search foe layout override
+													//search for theme override
 													if($service->attributes->getNamedItem("theme")){
 														$oTheme = $service->attributes->getNamedItem("theme")->nodeValue;
 														if(!empty($oTheme)){
@@ -164,7 +164,7 @@ class TsamaCustomizer extends TsamaObject{
 				$themeExt = $theme;
 		
 				if($themeExt != 'default'){
-					//custom layouts
+					//custom themes
 					//test for mobile and tablet
 					$themeExt .= (Tsama::UA()->IsMobile() ? (Tsama::UA()->IsTablet() ? '-tablet' : '-mobile') : '');
 				}else{
@@ -333,7 +333,7 @@ class TsamaCustomizer extends TsamaObject{
 											if($service->attributes->getNamedItem("primary")){
 												if(strtolower($service->attributes->getNamedItem("primary")->nodeValue) == 'true' ){
 
-													//search foe layout override
+													//search for layout override
 													if($service->attributes->getNamedItem("layout")){
 														$oLayout = $service->attributes->getNamedItem("layout")->nodeValue;
 														if(!empty($oLayout)){
@@ -356,6 +356,11 @@ class TsamaCustomizer extends TsamaObject{
 
 				$xmlFile = $layout.".xml";
 		
+				if(file_exists($location.DS.$layout.DS.'default.xml')){
+					$location.DS.$layout.DS;
+					$xmlFile = 'default.xml';
+				}
+
 				if(!file_exists($location.$xmlFile)){
 					return FALSE;
 				}
