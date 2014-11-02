@@ -5,6 +5,8 @@ Tsama is a lightweight, public domain, php framework/cms in the early stages of 
 
 The name tsama comes from the tsama melon of the Namib and Kalahari deserts from my country, Namibia. Tsama signify the life that is available for free to those that roam these deserts. In the same way, Tsama code is available for free to all that roam the internet.
 
+[Documentation](https://github.com/KuberKode/Tsama/wiki)
+
 License
 =======
 
