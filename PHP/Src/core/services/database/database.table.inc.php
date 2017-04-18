@@ -80,6 +80,23 @@ class TsamaDatabaseTable extends TsamaObject{
 			}
 		}
 	}
+	
+	public function GetColumn($key){
+		if(count($this->m_columns)>0){
+			return $this->m_columns[$key];
+		}
+		return NULL;
+	}
+	
+	public function GetColumnByName($name){
+		$colCount = count($this->m_columns);
+		for($i=0;$i<$colCount;$i++){
+			if($this->m_columns[$i]->name == $name){
+				return $this->m_columns[$i];
+			}
+		}
+		return NULL;
+	}
 
 	public function Create($drop = FALSE){
 		if($this->Exist() && $drop){
@@ -96,15 +113,30 @@ class TsamaDatabaseTable extends TsamaObject{
 			$sql = sprintf("CREATE TABLE IF NOT EXISTS `%s` (",$this->name);
 			$keys = '';
 			$autoInc = "";
-			//build ze sql
+			//build the sql
 			foreach($this->m_columns as $column){
 				$sql .= sprintf('`%s` %s',$column->name,$column->DescribeType());
+				$sql .= ",\r\n";
 				$keys .= $column->DescribeKey($this->name);
+				if($column->key != MYSQL_COLUMN_KEY_NONE){
+					$keys .= ",\r\n";
+				}
 				if($column->key == MYSQL_COLUMN_KEY_PRIMARY){ $autoInc .= " AUTO_INCREMENT=1"; }
+			}
+
+			if(!empty($keys)){
+				$sp = strrpos( $keys , "," );
+				if ($sp !== false) { $keys = substr($keys,0,$sp); }
+			}else{
+				$sp = strrpos( $sql , "," );
+				if ($sp !== false) { $sql = substr($sql,0,$sp); }
 			}
 			$sql .= $keys;
 			$sql .= ") ENGINE=InnoDB DEFAULT CHARSET=latin1".$autoInc;
-			$sql .= ";";	
+			$sql .= ";";
+			
+			TsamaDatabase::Execute($sql);
+			Tsama::Debug($sql);
 		}
 		
 		

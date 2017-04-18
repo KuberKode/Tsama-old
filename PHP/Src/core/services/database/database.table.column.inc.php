@@ -47,13 +47,14 @@ class TsamaDatabaseTableColumn extends TsamaObject{
 		$keyDesc = "";
 		switch($this->key){
 			case MYSQL_COLUMN_KEY_PRIMARY:{
-				$keyDesc .=  sprintf("PRIMARY KEY (`%s`),\r\n",$this->name);
+				$keyDesc .=  sprintf("PRIMARY KEY (`%s`)",$this->name);
 			}break;
 			case MYSQL_COLUMN_KEY_FOREIGN:{
-				$keyDesc .=  sprintf("KEY `idx_%s_%s` (`%s`),\r\n",$table,$this->name,$this->name);
+				$keyDesc .=  sprintf("KEY `idx_%s_%s` (`%s`)",$table,$this->name,$this->name);
 			}break;
 			default: break;
 		}
+		//$keyDesc .= ",\r\n"; //Do not enable. Should be handled elsewhere.
 		return $keyDesc;
 	}
 
@@ -74,7 +75,7 @@ class TsamaDatabaseTableColumn extends TsamaObject{
 				if($this->size != NULL){
 					if($this->size > 127){ $this->size = 127;}
 					if($this->size < -128){ $this->size = -128;}
-					$typeDesc .='('.$this->size.') ';
+					$typeDesc .='('.$this->size.')';
 				}
 				if($this->zeroFill){ $typeDesc .= " ZEROFILL"; }
 				$typeDesc .= " NOT NULL";
@@ -123,10 +124,14 @@ class TsamaDatabaseTableColumn extends TsamaObject{
 			}break;
 			case MYSQL_COLUMN_TYPE_INT: case MYSQL_COLUMN_TYPE_INTEGER:{
 				$typeDesc .= "INT";
+				if($this->zeroFill){ $typeDesc .= " ZEROFILL"; }
+				$typeDesc .= " NOT NULL";
 			}break;
 			case MYSQL_COLUMN_TYPE_INT_UNSIGNED: case MYSQL_COLUMN_TYPE_INTEGER_UNSIGNED:{
 				$typeDesc .= "INT";
 				$typeDesc .= " UNSIGNED"; 
+				if($this->zeroFill){ $typeDesc .= " ZEROFILL"; }
+				$typeDesc .= " NOT NULL";
 			}break;
 			case MYSQL_COLUMN_TYPE_BIGINT:{
 				$typeDesc .= "BIGINT";
@@ -163,10 +168,10 @@ class TsamaDatabaseTableColumn extends TsamaObject{
 				$typeDesc .= "FLOATING POINT ";
 			}break;
 			case MYSQL_COLUMN_TYPE_DATE:{
-				$typeDesc .= "DATE ";
+				$typeDesc .= "DATE NOT NULL DEFAULT '0000-00-00'";
 			}break;
 			case MYSQL_COLUMN_TYPE_DATETIME:{
-				$typeDesc .= "DATETIME ";
+				$typeDesc .= "DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'";
 			}break;
 			case MYSQL_COLUMN_TYPE_TIMESTAMP:{
 				$typeDesc .= "TIMESTAMP ";
@@ -192,6 +197,26 @@ class TsamaDatabaseTableColumn extends TsamaObject{
 			case MYSQL_COLUMN_TYPE_BLOB:{
 				$typeDesc .= "BLOB ";
 			}break;
+			case MYSQL_COLUMN_TYPE_CHAR:{
+				$typeDesc .= "CHAR";
+				if($this->size != NULL){
+					if($this->size > 255){ $this->size = 255;}
+					if($this->size < 0){ $this->size = 0;}
+					$typeDesc .='('.$this->size.')';
+				}
+				if($this->zeroFill){ $typeDesc .= " ZEROFILL"; }
+				$typeDesc .= " NOT NULL";
+			}break;
+			case MYSQL_COLUMN_TYPE_VARCHAR:{
+				$typeDesc .= "VARCHAR";
+				if($this->size != NULL){
+					if($this->size > 65535){ $this->size = 65535;}
+					if($this->size < 0){ $this->size = 0;}
+					$typeDesc .='('.$this->size.')';
+				}
+				if($this->zeroFill){ $typeDesc .= " ZEROFILL"; }
+				$typeDesc .= " NOT NULL";
+			}break;			
 			case MYSQL_COLUMN_TYPE_TEXT:{
 				$typeDesc .= "TEXT ";
 			}break;
@@ -219,7 +244,7 @@ class TsamaDatabaseTableColumn extends TsamaObject{
 		if($this->key == MYSQL_COLUMN_KEY_PRIMARY){
 			$typeDesc .= " AUTO_INCREMENT";
 		}
-		$typeDesc .= ",\r\n";
+		//$typeDesc .= ",\r\n"; //Do not enable. Should be handled elsewhere.
 		return $typeDesc;
 	}
 

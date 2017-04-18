@@ -35,15 +35,18 @@ class TsamaDatabase extends TsamaObject{
 	}
 
 	public static function InstallCore(){
+		Tsama::Debug('In TsamaDatabase::InstallCore()');
 		if(TsamaDatabase::IsConfigured() && TsamaDatabase::IsActive()){
 			//if connnected
 			$conn = TsamaDatabase::Connection();
 			//install core tables
+			//Services
 			$services = new TsamaDatabaseTable('t_services');
-
 			if(!$services->Exist()){
+				Tsama::Debug('Table t_services do not exist. Creating.');
 				//set columns
-				$services->AddColumn('id',MYSQL_COLUMN_TYPE_INT);
+				$serviceId = $services->AddColumn('id',MYSQL_COLUMN_TYPE_INT);
+				$serviceId->key = MYSQL_COLUMN_KEY_PRIMARY;
 				$services->AddColumn('type',MYSQL_COLUMN_TYPE_VARCHAR,255);
 				$services->AddColumn('name',MYSQL_COLUMN_TYPE_VARCHAR,255);
 				$services->AddColumn('status',MYSQL_COLUMN_TYPE_TINYINT);
@@ -51,6 +54,66 @@ class TsamaDatabase extends TsamaObject{
 				//install
 				$services->Create();
 			}
+			//People
+			$person = new TsamaDatabaseTable('t_person');
+			if(!$person->Exist()){
+				Tsama::Debug('Table t_person do not exist. Creating.');
+				//set columns
+				$personId = $person->AddColumn('id',MYSQL_COLUMN_TYPE_INT);
+				$personId->key = MYSQL_COLUMN_KEY_PRIMARY;
+				$person->AddColumn('firstnames',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$person->AddColumn('surname',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$person->AddColumn('name',MYSQL_COLUMN_TYPE_TEXT);
+				$person->AddColumn('alias',MYSQL_COLUMN_TYPE_TEXT);
+				$person->AddColumn('title',MYSQL_COLUMN_TYPE_VARCHAR,48);
+				$person->AddColumn('job_title',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$person->AddColumn('bio',MYSQL_COLUMN_TYPE_TEXT);
+				$person->AddColumn('img_url',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$person->AddColumn('birthdate',MYSQL_COLUMN_TYPE_DATE);
+				$person->AddColumn('email',MYSQL_COLUMN_TYPE_VARCHAR,255); 
+				$person->AddColumn('username',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$person->AddColumn('password',MYSQL_COLUMN_TYPE_TEXT);
+				$person->AddColumn('created',MYSQL_COLUMN_TYPE_DATETIME);
+				$personCB = $person->AddColumn('created_by',MYSQL_COLUMN_TYPE_INT);
+				$personCB->key = MYSQL_COLUMN_KEY_FOREIGN;
+				$person->AddColumn('modified',MYSQL_COLUMN_TYPE_DATETIME);
+				$personMB = $person->AddColumn('modified_by',MYSQL_COLUMN_TYPE_INT);
+				$personMB->key = MYSQL_COLUMN_KEY_FOREIGN;
+				$person->AddColumn('last_login',MYSQL_COLUMN_TYPE_DATETIME);
+
+				//install
+				$person->Create();
+			}
+			//Roles
+			$role = new TsamaDatabaseTable('t_role');
+			if(!$role->Exist()){
+				Tsama::Debug('Table t_role do not exist. Creating.');
+				//set columns
+				$roleId = $role->AddColumn('id',MYSQL_COLUMN_TYPE_INT);
+				$roleId->key = MYSQL_COLUMN_KEY_PRIMARY;
+				$role->AddColumn('title',MYSQL_COLUMN_TYPE_VARCHAR,255);
+				$role->AddColumn('description',MYSQL_COLUMN_TYPE_TEXT);
+				//install
+				$role->Create();
+				//TODO: data 
+				//INSERT INTO `t_role` VALUES (1,'Owner','Owner Role'),(2,'Administrator','Administrator Role'),(3,'Member','Member Role');
+			}
+			//Person Role
+			$personrole = new TsamaDatabaseTable('t_person_role');
+			if(!$personrole->Exist()){
+				Tsama::Debug('Table t_person_role do not exist. Creating.');
+				//set columns
+				$prId = $personrole->AddColumn('id',MYSQL_COLUMN_TYPE_INT);
+				$prId->key = MYSQL_COLUMN_KEY_PRIMARY;
+				$personFk = $personrole->AddColumn('fk_person',MYSQL_COLUMN_TYPE_INT);
+				$personFk->key = MYSQL_COLUMN_KEY_FOREIGN;
+				$roleFk = $personrole->AddColumn('fk_role',MYSQL_COLUMN_TYPE_INT);
+				$roleFk->key = MYSQL_COLUMN_KEY_FOREIGN;
+				//install
+				$personrole->Create();
+			}
+			
+			
 		}
 	}
 
@@ -174,6 +237,11 @@ class TsamaDatabase extends TsamaObject{
 	public static function GetTables(){
 		//Show tables from active db
 	}
+	
+	public function LoadConfig(){ //Manually Load the db configuration
+		
+	}
+	
 	public function Query($sql,$params = null){
 		global $_DB;
 
@@ -221,7 +289,8 @@ class TsamaDatabase extends TsamaObject{
 			}
 			
 			$this->OnConnect();
-
+			
+			return $_DB['Active'];
 	}
 
 	public function set(){

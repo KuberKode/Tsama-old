@@ -199,6 +199,7 @@ class TsamaSetup extends TsamaObject{
 	}
 
 	public function get($params){
+		global $_DB;
 		//only if configuration do not already exist
 		if(!TsamaDatabase::IsConfigured()){
 
@@ -225,11 +226,21 @@ class TsamaSetup extends TsamaObject{
 				
 				//continue with save
 				try{
-					$db = new PDO(strtolower($_POST['driver']).':host='.$_POST['host'].';dbname='.$_POST['nm'], $_POST['uid'],$_POST['dbpwd']);
 
 					$this->WriteSiteConf();
-
-					$this->WriteDbConf();
+					if($this->WriteDbConf()){
+						Tsama::Debug('DB Configured successfully');
+						$_DB['Driver'] = $_POST['driver'];
+						$_DB['Host'] = $_POST['host'];
+						$_DB['Username'] = $_POST['uid'];
+						$_DB['Password'] = $_POST['dbpwd'];
+						$_DB['Name'] = $_POST['nm'];
+					}
+					
+					$db = new TsamaDatabase();
+					if($db->Connect(null)){
+						$db->InstallCore();
+					}
 
 					$brand = $setup->AddChild('div');
 					$logo = $brand->AddChild('img');

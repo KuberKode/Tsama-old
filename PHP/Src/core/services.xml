@@ -4,7 +4,6 @@
 	<service name="database" node="global">
 		<slots>
 			<slot signal="OnLoad" name="Connect" />
-			<slot signal="OnLoad" name="InstallCore" />
 		</slots>
 	</service>
 	<service name="customizer" node="global">
